@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NStar X Platform - AI-Powered Development Ecosystem</title>
+    <title>NStar X Dev Agents Platform</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
@@ -13,930 +13,337 @@
             --border: #475569;
             --text: #e2e8f0;
             --text-dim: #94a3b8;
-            --accent-pulse: #818cf8;
-            --accent-exec: #34d399;
-            --accent-shared: #f59e0b;
-            --gradient-pulse: linear-gradient(135deg, #667eea, #764ba2);
-            --gradient-exec: linear-gradient(135deg, #34d399, #059669);
+            --pulse: #818cf8;
+            --exec: #34d399;
+            --warn: #f59e0b;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        /* Hero */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            background: radial-gradient(ellipse at 30% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(52, 211, 153, 0.1) 0%, transparent 50%),
-                        var(--bg);
+            min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 2rem;
+            background: radial-gradient(ellipse at 30% 20%, rgba(129,140,248,0.12) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(52,211,153,0.08) 0%, transparent 50%), var(--bg);
         }
+        .hero-badge { display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; letter-spacing: 0.1em; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; background: linear-gradient(135deg, #e2e8f0, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.15rem; color: var(--text-dim); max-width: 680px; margin-bottom: 2.5rem; }
+        .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .hero-links a { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.6rem; border-radius: 0.75rem; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: transform 0.2s, box-shadow 0.2s; }
+        .hero-links a:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
+        .btn-pulse { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-exec { background: linear-gradient(135deg, #34d399, #059669); color: white; }
+        .btn-outline { border: 1px solid var(--border); color: var(--text); }
+
+        .section { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+        .section-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .section-sub { color: var(--text-dim); font-size: 1.05rem; max-width: 600px; margin-bottom: 3rem; }
+
+        /* Story cards */
+        .story { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 5rem; }
+        .story.reverse { direction: rtl; }
+        .story.reverse > * { direction: ltr; }
+        .story-text h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .story-text h3 .badge { display: inline-block; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 999px; vertical-align: middle; margin-left: 0.5rem; font-weight: 600; }
+        .badge-pulse { background: rgba(129,140,248,0.2); color: var(--pulse); }
+        .badge-exec { background: rgba(52,211,153,0.2); color: var(--exec); }
+        .story-text p { color: var(--text-dim); margin-bottom: 1rem; }
+        .story-text ul { list-style: none; }
+        .story-text li { padding: 0.3rem 0; padding-left: 1.2rem; position: relative; color: var(--text-dim); font-size: 0.9rem; }
+        .story-text li::before { content: ''; position: absolute; left: 0; top: 0.7rem; width: 6px; height: 6px; border-radius: 50%; background: var(--pulse); }
+        .story-text.exec li::before { background: var(--exec); }
+
+        .story-img { border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .story-img img { width: 100%; display: block; }
+
+        /* Screenshot gallery */
+        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+        .gallery-card { border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--border); background: var(--surface); transition: border-color 0.2s; }
+        .gallery-card:hover { border-color: var(--pulse); }
+        .gallery-card img { width: 100%; display: block; border-bottom: 1px solid var(--border); }
+        .gallery-card .cap { padding: 0.75rem 1rem; }
+        .gallery-card .cap h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .gallery-card .cap p { font-size: 0.78rem; color: var(--text-dim); }
+
+        /* Diagram */
+        .diagram-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; margin-top: 4rem; }
+        .diagram-wrap h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .diagram-wrap > p { color: var(--text-dim); margin-bottom: 2rem; font-size: 0.95rem; }
+        #diagram svg { width: 100%; }
+
+        /* Agent section */
+        .agent-box { background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(52,211,153,0.08)); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; margin-top: 4rem; }
+        .agent-box h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .agent-box > p { color: var(--text-dim); margin-bottom: 1.5rem; }
+        .ep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .ep-card { background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
+        .ep-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .ep-card code { display: block; background: var(--bg); padding: 0.5rem 0.75rem; border-radius: 0.4rem; font-size: 0.8rem; margin-bottom: 0.6rem; word-break: break-all; }
+        .ep-card .c-pulse { color: var(--pulse); }
+        .ep-card .c-exec { color: var(--exec); }
+        .ep-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
+
+        footer { text-align: center; padding: 3rem 2rem; color: var(--text-dim); font-size: 0.85rem; border-top: 1px solid var(--border); }
+        footer a { color: var(--pulse); text-decoration: none; }
 
-        .hero-badge {
-            display: inline-block;
-            padding: 0.4rem 1.2rem;
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            font-size: 0.8rem;
-            color: var(--text-dim);
-            margin-bottom: 2rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #e2e8f0, #818cf8, #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-dim);
-            max-width: 700px;
-            margin-bottom: 3rem;
-        }
-
-        .hero-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .hero-links a {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.8rem 1.8rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .hero-links a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        }
-
-        .btn-pulse {
-            background: var(--gradient-pulse);
-            color: white;
-        }
-
-        .btn-exec {
-            background: var(--gradient-exec);
-            color: white;
-        }
-
-        .btn-outline {
-            border: 1px solid var(--border);
-            color: var(--text);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--accent-pulse);
-        }
-
-        /* Sections */
-        .section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 6rem 2rem;
-        }
-
-        .section-title {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin-bottom: 3rem;
-        }
-
-        /* Service Cards */
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .service-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            overflow: hidden;
-            transition: border-color 0.3s;
-        }
-
-        .service-card:hover {
-            border-color: var(--accent-pulse);
-        }
-
-        .service-card:nth-child(2):hover {
-            border-color: var(--accent-exec);
-        }
-
-        .service-header {
-            padding: 2rem 2rem 1.5rem;
-        }
-
-        .service-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .service-card:first-child .service-icon { background: var(--gradient-pulse); }
-        .service-card:nth-child(2) .service-icon { background: var(--gradient-exec); }
-
-        .service-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .service-header p {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-        }
-
-        .service-body {
-            padding: 0 2rem 2rem;
-        }
-
-        .tech-stack {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-
-        .tech-tag {
-            padding: 0.25rem 0.75rem;
-            background: var(--surface2);
-            border-radius: 999px;
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            border: 1px solid transparent;
-        }
-
-        .features-list {
-            list-style: none;
-        }
-
-        .features-list li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        .features-list li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.85rem;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .service-card:first-child .features-list li::before { background: var(--accent-pulse); }
-        .service-card:nth-child(2) .features-list li::before { background: var(--accent-exec); }
-
-        .service-url {
-            display: block;
-            margin-top: 1.5rem;
-            padding: 0.75rem 1rem;
-            background: var(--bg);
-            border-radius: 0.5rem;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            color: var(--accent-pulse);
-            text-decoration: none;
-            border: 1px solid var(--border);
-            transition: border-color 0.2s;
-        }
-
-        .service-url:hover { border-color: var(--accent-pulse); }
-
-        /* Screenshots */
-        .screenshots {
-            margin-top: 4rem;
-        }
-
-        .screenshot-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .screenshot-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            overflow: hidden;
-        }
-
-        .screenshot-img {
-            width: 100%;
-            aspect-ratio: 16/10;
-            object-fit: cover;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .screenshot-mockup {
-            width: 100%;
-            aspect-ratio: 16/10;
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            padding: 1rem;
-            overflow: hidden;
-        }
-
-        .mockup-bar {
-            display: flex;
-            gap: 0.4rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .mockup-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--surface2);
-        }
-
-        .mockup-content {
-            flex: 1;
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .screenshot-card .caption {
-            padding: 1rem 1.25rem;
-        }
-
-        .caption h4 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .caption p {
-            font-size: 0.8rem;
-            color: var(--text-dim);
-        }
-
-        /* D3 Diagram */
-        .diagram-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 2.5rem;
-            margin-top: 4rem;
-        }
-
-        .diagram-section h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .diagram-section > p {
-            color: var(--text-dim);
-            margin-bottom: 2rem;
-        }
-
-        #architecture-diagram {
-            width: 100%;
-            min-height: 520px;
-        }
-
-        #architecture-diagram svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Agent Section */
-        .agent-section {
-            background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(52,211,153,0.1));
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            padding: 3rem;
-            margin-top: 4rem;
-        }
-
-        .agent-section h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .agent-section p {
-            color: var(--text-dim);
-            margin-bottom: 1.5rem;
-        }
-
-        .endpoint-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1rem;
-        }
-
-        .endpoint-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-        }
-
-        .endpoint-card h4 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .endpoint-card code {
-            display: block;
-            background: var(--bg);
-            padding: 0.6rem 0.8rem;
-            border-radius: 0.4rem;
-            font-size: 0.8rem;
-            margin-bottom: 0.75rem;
-            word-break: break-all;
-        }
-
-        .endpoint-card .ep-pulse code { color: var(--accent-pulse); }
-        .endpoint-card .ep-exec code { color: var(--accent-exec); }
-
-        .endpoint-card p {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin: 0;
-        }
-
-        /* API table */
-        .api-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-        }
-
-        .api-table th, .api-table td {
-            padding: 0.6rem 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .api-table th {
-            color: var(--text-dim);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.05em;
-        }
-
-        .api-table td code {
-            color: var(--accent-pulse);
-            font-size: 0.8rem;
-        }
-
-        .method {
-            display: inline-block;
-            padding: 0.15rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        .method-get { background: rgba(52,211,153,0.15); color: var(--accent-exec); }
-        .method-post { background: rgba(129,140,248,0.15); color: var(--accent-pulse); }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-dim);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-        }
-
-        footer a {
-            color: var(--accent-pulse);
-            text-decoration: none;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .services {
-                grid-template-columns: 1fr;
-            }
-            .screenshot-grid {
-                grid-template-columns: 1fr;
-            }
-            .endpoint-cards {
-                grid-template-columns: 1fr;
-            }
-            .diagram-section {
-                padding: 1.5rem;
-            }
+            .story { grid-template-columns: 1fr; }
+            .story.reverse { direction: ltr; }
+            .ep-grid { grid-template-columns: 1fr; }
+            .gallery { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-<!-- Hero -->
 <section class="hero">
-    <span class="hero-badge">NStar X Inc. &middot; Internal Platform</span>
-    <h1>AI-Powered Development Ecosystem</h1>
-    <p>Two complementary services for managing the full lifecycle of AI-driven software projects &mdash; from strategic roadmapping to granular execution planning.</p>
+    <span class="hero-badge">NStar X Inc.</span>
+    <h1>Build Software Faster with AI Coding Agents</h1>
+    <p>Two tools that give you and your AI agents (Claude Code, Cursor, etc.) complete visibility over your projects &mdash; from high-level strategy to daily task execution.</p>
     <div class="hero-links">
-        <a href="https://nstarx.myddns.me/pulse/" class="btn-pulse">Pulse Prana</a>
-        <a href="https://nstarx.myddns.me/execution/" class="btn-exec">Execution Flow</a>
-        <a href="#architecture" class="btn-outline">Architecture</a>
+        <a href="https://nstarx.myddns.me/pulse/" class="btn-pulse">Open Pulse Prana</a>
+        <a href="https://nstarx.myddns.me/execution/" class="btn-exec">Open Execution Flow</a>
+        <a href="#how-it-works" class="btn-outline">How It Works</a>
     </div>
 </section>
 
-<!-- Services -->
-<div class="section" id="services">
-    <h2 class="section-title">The Platform</h2>
-    <p class="section-subtitle">Two services, one vision: full visibility from strategic goals to daily tasks.</p>
+<!-- Story: Pulse Prana -->
+<div class="section" id="how-it-works">
+    <h2 class="section-title">Your AI-Powered Dev Workflow</h2>
+    <p class="section-sub">You focus on decisions. Your AI agents get the context they need to write the right code.</p>
 
-    <div class="services">
-        <!-- Pulse Prana -->
-        <div class="service-card">
-            <div class="service-header">
-                <div class="service-icon">P</div>
-                <h3>Pulse Prana</h3>
-                <p>Real-time project management and monitoring system for AI-driven development ecosystems. The strategic brain.</p>
-            </div>
-            <div class="service-body">
-                <div class="tech-stack">
-                    <span class="tech-tag">Vue 3</span>
-                    <span class="tech-tag">Express.js</span>
-                    <span class="tech-tag">SQLite</span>
-                    <span class="tech-tag">Socket.io</span>
-                    <span class="tech-tag">Tailwind CSS</span>
-                    <span class="tech-tag">Mermaid.js</span>
-                    <span class="tech-tag">Google OAuth</span>
-                </div>
-                <ul class="features-list">
-                    <li>Multi-project portfolio with real-time WebSocket updates</li>
-                    <li>Product roadmap with milestones, dependencies &amp; critical path</li>
-                    <li>Three-horizon planning (Now / Next / Later)</li>
-                    <li>AI-powered project healing &amp; status suggestions</li>
-                    <li>Automated status emails with Mermaid diagrams</li>
-                    <li>Post-mortem management with checklists &amp; lessons learned</li>
-                    <li>Comprehensive REST API with Swagger docs</li>
-                    <li>API key auth for programmatic / AI agent access</li>
-                </ul>
-                <a href="https://nstarx.myddns.me/pulse/" class="service-url">https://nstarx.myddns.me/pulse/</a>
-            </div>
+    <div class="story">
+        <div class="story-text">
+            <h3>Track the big picture <span class="badge badge-pulse">Pulse Prana</span></h3>
+            <p>Define your projects, capabilities, and milestones. Pulse Prana keeps track of what's done, what's in progress, and what's blocked &mdash; so you always know where things stand.</p>
+            <ul>
+                <li>Dashboard with real-time project metrics</li>
+                <li>Product roadmap with horizon planning (Now / Next / Later)</li>
+                <li>AI-powered status healing and smart suggestions</li>
+                <li>Automated status emails with diagrams</li>
+            </ul>
         </div>
-
-        <!-- Execution Flow -->
-        <div class="service-card">
-            <div class="service-header">
-                <div class="service-icon">E</div>
-                <h3>Execution Flow</h3>
-                <p>Execution plan visualization and analysis dashboard. Transforms requirements into actionable, time-bound plans.</p>
-            </div>
-            <div class="service-body">
-                <div class="tech-stack">
-                    <span class="tech-tag">Vue 3</span>
-                    <span class="tech-tag">Express.js</span>
-                    <span class="tech-tag">D3.js</span>
-                    <span class="tech-tag">Module Federation</span>
-                    <span class="tech-tag">Vite</span>
-                    <span class="tech-tag">Google OAuth</span>
-                </div>
-                <ul class="features-list">
-                    <li>Interactive Gantt chart with task dependencies</li>
-                    <li>Team scenario comparison (solo &rarr; accelerated)</li>
-                    <li>Risk factor visualization with severity &amp; mitigation</li>
-                    <li>Critical path analysis &mdash; 7 tasks that determine timeline</li>
-                    <li>Phase timeline with parallel work strategy</li>
-                    <li>Embeddable via Webpack Module Federation</li>
-                    <li>REST API with automatic data caching</li>
-                    <li>Deployable via Docker / Kubernetes</li>
-                </ul>
-                <a href="https://nstarx.myddns.me/execution/" class="service-url">https://nstarx.myddns.me/execution/</a>
-            </div>
+        <div class="story-img">
+            <img src="screenshots/pulse-dashboard.png" alt="Pulse Prana Dashboard">
         </div>
     </div>
 
-    <!-- Screenshots -->
-    <div class="screenshots">
-        <h3 class="section-title" style="font-size:1.5rem;">Application Views</h3>
-        <p class="section-subtitle">Key screens from both services.</p>
-        <div class="screenshot-grid">
-            <div class="screenshot-card">
-                <div class="screenshot-mockup" id="mockup-dashboard"></div>
-                <div class="caption">
-                    <h4>Pulse Prana &mdash; Dashboard</h4>
-                    <p>Personalized overview with active sessions, system health, and account status metrics.</p>
-                </div>
-            </div>
-            <div class="screenshot-card">
-                <div class="screenshot-mockup" id="mockup-roadmap"></div>
-                <div class="caption">
-                    <h4>Pulse Prana &mdash; Product Roadmap</h4>
-                    <p>Visual timeline of capabilities, milestones, and deliverables with AI-powered suggestions.</p>
-                </div>
-            </div>
-            <div class="screenshot-card">
-                <div class="screenshot-mockup" id="mockup-gantt"></div>
-                <div class="caption">
-                    <h4>Execution Flow &mdash; Gantt Chart</h4>
-                    <p>Interactive task timeline with phase grouping, critical path highlighting, and dependencies.</p>
-                </div>
-            </div>
-            <div class="screenshot-card">
-                <div class="screenshot-mockup" id="mockup-risk"></div>
-                <div class="caption">
-                    <h4>Execution Flow &mdash; Risk Analysis</h4>
-                    <p>Risk factors with severity scoring, impact ranges, and mitigation priorities.</p>
-                </div>
-            </div>
+    <div class="story reverse">
+        <div class="story-text">
+            <h3>Plan every detail <span class="badge badge-pulse">Pulse Prana</span></h3>
+            <p>Rich project status reports that your AI agents can read via API. Track endpoints, phases, completion rates, and recommended next steps &mdash; all in one place.</p>
+            <ul>
+                <li>Executive summaries with key metrics</li>
+                <li>Phase completion tracking with percentages</li>
+                <li>Critical gaps and recommended path forward</li>
+                <li>Action items organized by timeline</li>
+            </ul>
+        </div>
+        <div class="story-img">
+            <img src="screenshots/pulse-status.png" alt="Pulse Prana Project Status">
+        </div>
+    </div>
+
+    <div class="story">
+        <div class="story-text exec">
+            <h3>Break it down into tasks <span class="badge badge-exec">Execution Flow</span></h3>
+            <p>Turn your project plan into a concrete execution timeline. See how long it takes with different team sizes, which tasks can run in parallel, and where the risks are.</p>
+            <ul>
+                <li>Team scenario comparison (solo to full team)</li>
+                <li>Phase timeline with effort estimates</li>
+                <li>Parallel work strategy optimization</li>
+                <li>Quick wins identification for early momentum</li>
+            </ul>
+        </div>
+        <div class="story-img">
+            <img src="screenshots/exec-gantt.png" alt="Execution Flow Team & Phases">
+        </div>
+    </div>
+
+    <div class="story reverse">
+        <div class="story-text exec">
+            <h3>Manage risk proactively <span class="badge badge-exec">Execution Flow</span></h3>
+            <p>See what could go wrong before it does. Impact ranges, severity scoring, and critical path analysis help you and your AI agents prioritize what matters most.</p>
+            <ul>
+                <li>Risk factors with min/max impact ranges</li>
+                <li>Critical path: 7 tasks that determine your timeline</li>
+                <li>Task breakdown by status, priority, and category</li>
+                <li>Gantt chart with dependency tracking</li>
+            </ul>
+        </div>
+        <div class="story-img">
+            <img src="screenshots/exec-risk.png" alt="Execution Flow Risk Analysis">
+        </div>
+    </div>
+</div>
+
+<!-- Gallery -->
+<div class="section" style="padding-top:0;">
+    <h2 class="section-title">More Screenshots</h2>
+    <p class="section-sub">Both apps are fully functional and deployed.</p>
+    <div class="gallery">
+        <div class="gallery-card">
+            <img src="screenshots/pulse-roadmap.png" alt="Roadmap">
+            <div class="cap"><h4>Product Roadmap</h4><p>Capabilities timeline with horizons, progress bars, and status badges.</p></div>
+        </div>
+        <div class="gallery-card">
+            <img src="screenshots/exec-overview.png" alt="Exec Overview">
+            <div class="cap"><h4>Execution Plan Overview</h4><p>Project summary with total effort, tasks, phases, and team scenarios.</p></div>
+        </div>
+        <div class="gallery-card">
+            <img src="screenshots/exec-tasks.png" alt="Task Overview">
+            <div class="cap"><h4>Task Breakdown</h4><p>Critical path analysis and task overview by status, priority, and category.</p></div>
+        </div>
+        <div class="gallery-card">
+            <img src="screenshots/pulse-login.png" alt="Login">
+            <div class="cap"><h4>Google OAuth Login</h4><p>Secure sign-in restricted to @nstarxinc.com Google Workspace accounts.</p></div>
         </div>
     </div>
 
     <!-- D3 Architecture Diagram -->
-    <div class="diagram-section" id="architecture">
-        <h3>How They Complement Each Other</h3>
-        <p>Pulse Prana handles the strategic layer (what to build &amp; why). Execution Flow handles the tactical layer (how to build &amp; when). Together they cover the full project lifecycle.</p>
-        <div id="architecture-diagram"></div>
+    <div class="diagram-wrap" id="architecture">
+        <h3>How the Two Services Work Together</h3>
+        <p>You define your project goals in Pulse Prana. Your AI coding agent reads the context via API, then uses Execution Flow to understand what to build next, in what order, and what risks to watch for.</p>
+        <div id="diagram"></div>
     </div>
 
-    <!-- Agent Section -->
-    <div class="agent-section" id="agents">
-        <h3>For AI Agents</h3>
-        <p>Both services expose machine-readable endpoints designed for AI agent consumption. Feed these URLs to Claude, GPT, or any coding agent to give them full context about your projects.</p>
-        <div class="endpoint-cards">
-            <div class="endpoint-card">
+    <!-- Agent section -->
+    <div class="agent-box" id="agents">
+        <h3>Give Your AI Agent Full Project Context</h3>
+        <p>Point Claude Code, Cursor, or any AI coding agent at these endpoints. They'll instantly understand your entire project: what's built, what's planned, dependencies, risks, and recommended next steps.</p>
+        <div class="ep-grid">
+            <div class="ep-card">
                 <h4>Pulse Prana &mdash; Know Me</h4>
-                <div class="ep-pulse">
-                    <code>GET /pulse/api/know-me</code>
-                </div>
-                <p>Returns a comprehensive text description of the entire service: all API endpoints, data models, authentication methods, real-time features, and usage patterns for AI agents.</p>
+                <code class="c-pulse">curl https://nstarx.myddns.me/pulse/api/know-me</code>
+                <p>Returns a complete description of all API endpoints, data models, and usage patterns. One URL gives your agent everything it needs to interact with your project data.</p>
             </div>
-            <div class="endpoint-card">
-                <h4>Execution Flow &mdash; Health &amp; Projects</h4>
-                <div class="ep-exec">
-                    <code>GET /execution/api/health</code>
-                </div>
-                <p>Health check, project listing, and execution plan API. Includes tasks, phases, team scenarios, risk factors, and critical path data.</p>
+            <div class="ep-card">
+                <h4>Execution Flow &mdash; Execution Plan</h4>
+                <code class="c-exec">curl https://nstarx.myddns.me/execution/api/execution-plan</code>
+                <p>Full execution plan with tasks, phases, team scenarios, risk factors, and critical path. Your agent can use this to prioritize work and estimate timelines.</p>
             </div>
         </div>
-
-        <h4 style="margin-top:2rem; margin-bottom:1rem;">Key API Endpoints</h4>
-        <table class="api-table">
-            <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Endpoint</th>
-                    <th>Description</th>
-                    <th>Auth</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="method method-get">PP</span></td>
-                    <td><code>/pulse/api/projects</code></td>
-                    <td>List all projects</td>
-                    <td>API Key / Session</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-get">PP</span></td>
-                    <td><code>/pulse/api/capabilities</code></td>
-                    <td>Project capabilities &amp; status</td>
-                    <td>API Key / Session</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-get">PP</span></td>
-                    <td><code>/pulse/api/roadmap/:id/timeline</code></td>
-                    <td>Roadmap timeline view</td>
-                    <td>API Key / Session</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-get">PP</span></td>
-                    <td><code>/pulse/api/healing/heal/:id</code></td>
-                    <td>AI-powered project healing</td>
-                    <td>API Key / Session</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-post">EF</span></td>
-                    <td><code>/execution/api/execution-plan</code></td>
-                    <td>Full execution plan</td>
-                    <td>API Key</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-post">EF</span></td>
-                    <td><code>/execution/api/execution-plan/critical-path</code></td>
-                    <td>Critical path analysis</td>
-                    <td>API Key</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-post">EF</span></td>
-                    <td><code>/execution/api/execution-plan/risks</code></td>
-                    <td>Risk factors &amp; mitigation</td>
-                    <td>API Key</td>
-                </tr>
-                <tr>
-                    <td><span class="method method-post">EF</span></td>
-                    <td><code>/execution/api/execution-plan/team-scenarios</code></td>
-                    <td>Team size recommendations</td>
-                    <td>API Key</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 </div>
 
 <footer>
-    <p>NStar X Inc. &middot; Built with Vue 3, Express.js, D3.js &middot; <a href="https://github.com/padrian2s/nstarx-platform">Source on GitHub</a></p>
+    <p>NStar X Inc. &middot; <a href="https://github.com/nstarx/nstarx-dev-agents-platform">Source on GitHub</a></p>
 </footer>
 
 <script>
-// ========================================
-// Screenshot Mockups (SVG-based)
-// ========================================
-function renderMockups() {
-    // Dashboard mockup
-    const dash = d3.select('#mockup-dashboard').append('svg').attr('viewBox', '0 0 640 400');
-    // Top bar
-    dash.append('rect').attr('width', 640).attr('height', 40).attr('fill', '#1e293b');
-    dash.append('circle').attr('cx', 16).attr('cy', 20).attr('r', 5).attr('fill', '#ef4444');
-    dash.append('circle').attr('cx', 32).attr('cy', 20).attr('r', 5).attr('fill', '#f59e0b');
-    dash.append('circle').attr('cx', 48).attr('cy', 20).attr('r', 5).attr('fill', '#22c55e');
-    dash.append('text').attr('x', 320).attr('y', 25).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 11).text('Pulse Prana - Dashboard');
-    // Sidebar
-    dash.append('rect').attr('x', 0).attr('y', 40).attr('width', 160).attr('height', 360).attr('fill', '#111827');
-    ['Projects', 'Roadmap', 'Capabilities', 'Metrics', 'Healing'].forEach((t, i) => {
-        dash.append('rect').attr('x', 12).attr('y', 60 + i * 36).attr('width', 136).attr('height', 28).attr('rx', 6).attr('fill', i === 0 ? '#374151' : 'transparent');
-        dash.append('text').attr('x', 28).attr('y', 79 + i * 36).attr('fill', i === 0 ? '#e2e8f0' : '#6b7280').attr('font-size', 11).text(t);
-    });
-    // Metric cards
-    const metrics = [
-        { label: 'Active Sessions', val: '1', color: '#818cf8' },
-        { label: 'System Health', val: 'Good', color: '#34d399' },
-        { label: 'Projects', val: '4', color: '#f59e0b' },
-    ];
-    metrics.forEach((m, i) => {
-        const x = 180 + i * 150;
-        dash.append('rect').attr('x', x).attr('y', 60).attr('width', 138).attr('height', 80).attr('rx', 10).attr('fill', '#1e293b').attr('stroke', '#334155');
-        dash.append('text').attr('x', x + 15).attr('y', 85).attr('fill', '#94a3b8').attr('font-size', 10).text(m.label);
-        dash.append('text').attr('x', x + 15).attr('y', 120).attr('fill', m.color).attr('font-size', 22).attr('font-weight', 700).text(m.val);
-    });
-    // Chart area
-    dash.append('rect').attr('x', 180).attr('y', 160).attr('width', 440).attr('height', 220).attr('rx', 10).attr('fill', '#1e293b').attr('stroke', '#334155');
-    const line = d3.line().curve(d3.curveBasis);
-    const pts = [[200,340],[260,300],[320,320],[380,270],[440,290],[500,240],[560,260],[600,220]];
-    dash.append('path').attr('d', line(pts)).attr('fill', 'none').attr('stroke', '#818cf8').attr('stroke-width', 2.5);
-    dash.append('text').attr('x', 195).attr('y', 182).attr('fill', '#94a3b8').attr('font-size', 10).text('Project Activity');
+(function() {
+    const container = document.getElementById('diagram');
+    const w = Math.min(container.clientWidth, 960);
+    const h = 500;
+    const cx = w / 2;
 
-    // Roadmap mockup
-    const rm = d3.select('#mockup-roadmap').append('svg').attr('viewBox', '0 0 640 400');
-    rm.append('rect').attr('width', 640).attr('height', 40).attr('fill', '#1e293b');
-    rm.append('text').attr('x', 320).attr('y', 25).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 11).text('Pulse Prana - Product Roadmap');
-    rm.append('text').attr('x', 30).attr('y', 75).attr('fill', '#e2e8f0').attr('font-size', 16).attr('font-weight', 700).text('Product Roadmap');
-    // Buttons
-    ['Sync', 'Suggestions', 'Add Milestone', 'Export'].forEach((t, i) => {
-        const colors = ['#3b82f6', '#8b5cf6', '#22c55e', '#6366f1'];
-        rm.append('rect').attr('x', 30 + i * 120).attr('y', 90).attr('width', 110).attr('height', 28).attr('rx', 6).attr('fill', colors[i]).attr('opacity', 0.8);
-        rm.append('text').attr('x', 85 + i * 120).attr('y', 108).attr('text-anchor', 'middle').attr('fill', 'white').attr('font-size', 10).text(t);
-    });
-    // Timeline bars
-    const phases = [
-        { name: 'Phase 1 - Core Setup', w: 200, color: '#818cf8' },
-        { name: 'Phase 2 - API Layer', w: 300, color: '#34d399' },
-        { name: 'Phase 3 - Frontend', w: 250, color: '#f59e0b' },
-        { name: 'Phase 4 - Testing', w: 180, color: '#ef4444' },
-        { name: 'Phase 5 - Deploy', w: 120, color: '#8b5cf6' },
-    ];
-    phases.forEach((p, i) => {
-        const y = 140 + i * 46;
-        rm.append('text').attr('x', 30).attr('y', y + 15).attr('fill', '#94a3b8').attr('font-size', 10).text(p.name);
-        rm.append('rect').attr('x', 220 + (i * 30)).attr('y', y).attr('width', p.w).attr('height', 24).attr('rx', 4).attr('fill', p.color).attr('opacity', 0.7);
-    });
-
-    // Gantt mockup
-    const g = d3.select('#mockup-gantt').append('svg').attr('viewBox', '0 0 640 400');
-    g.append('rect').attr('width', 640).attr('height', 40).attr('fill', '#1e293b');
-    g.append('text').attr('x', 320).attr('y', 25).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 11).text('Execution Flow - Gantt Chart');
-    const tasks = [
-        { name: 'Project Setup', start: 0, dur: 2, cat: 'setup' },
-        { name: 'Database Schema', start: 1, dur: 3, cat: 'backend' },
-        { name: 'Auth Module', start: 2, dur: 4, cat: 'backend' },
-        { name: 'REST API', start: 3, dur: 5, cat: 'backend' },
-        { name: 'UI Components', start: 4, dur: 4, cat: 'frontend' },
-        { name: 'Integration', start: 7, dur: 3, cat: 'testing' },
-        { name: 'Testing', start: 8, dur: 3, cat: 'testing' },
-        { name: 'Deployment', start: 10, dur: 2, cat: 'devops' },
-    ];
-    const catColors = { setup: '#94a3b8', backend: '#34d399', frontend: '#818cf8', testing: '#f59e0b', devops: '#ef4444' };
-    tasks.forEach((t, i) => {
-        const y = 55 + i * 40;
-        g.append('text').attr('x', 15).attr('y', y + 18).attr('fill', '#94a3b8').attr('font-size', 10).text(t.name);
-        g.append('rect').attr('x', 160 + t.start * 38).attr('y', y).attr('width', t.dur * 38).attr('height', 26).attr('rx', 4).attr('fill', catColors[t.cat]).attr('opacity', 0.75);
-    });
-    // Grid lines
-    for (let w = 0; w <= 12; w++) {
-        g.append('line').attr('x1', 160 + w * 38).attr('y1', 50).attr('x2', 160 + w * 38).attr('y2', 380).attr('stroke', '#334155').attr('stroke-dasharray', '2,4');
-        g.append('text').attr('x', 160 + w * 38).attr('y', 395).attr('fill', '#475569').attr('font-size', 9).attr('text-anchor', 'middle').text('W' + (w + 1));
-    }
-
-    // Risk mockup
-    const r = d3.select('#mockup-risk').append('svg').attr('viewBox', '0 0 640 400');
-    r.append('rect').attr('width', 640).attr('height', 40).attr('fill', '#1e293b');
-    r.append('text').attr('x', 320).attr('y', 25).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 11).text('Execution Flow - Risk Analysis');
-    const risks = [
-        { name: 'Scope Creep', severity: 0.85, color: '#ef4444' },
-        { name: 'Technical Debt', severity: 0.7, color: '#f59e0b' },
-        { name: 'Resource Gaps', severity: 0.6, color: '#f59e0b' },
-        { name: 'Integration Issues', severity: 0.55, color: '#f59e0b' },
-        { name: 'Timeline Slip', severity: 0.45, color: '#22c55e' },
-        { name: 'Vendor Lock-in', severity: 0.3, color: '#22c55e' },
-    ];
-    risks.forEach((rk, i) => {
-        const y = 65 + i * 52;
-        r.append('text').attr('x', 20).attr('y', y + 15).attr('fill', '#e2e8f0').attr('font-size', 11).text(rk.name);
-        r.append('rect').attr('x', 180).attr('y', y).attr('width', 420).attr('height', 24).attr('rx', 4).attr('fill', '#1e293b');
-        r.append('rect').attr('x', 180).attr('y', y).attr('width', 420 * rk.severity).attr('height', 24).attr('rx', 4).attr('fill', rk.color).attr('opacity', 0.7);
-        r.append('text').attr('x', 188 + 420 * rk.severity).attr('y', y + 16).attr('fill', '#e2e8f0').attr('font-size', 10).attr('font-weight', 600).text(Math.round(rk.severity * 100) + '%');
-    });
-}
-
-// ========================================
-// D3 Architecture Diagram
-// ========================================
-function renderArchitectureDiagram() {
-    const container = document.getElementById('architecture-diagram');
-    const width = container.clientWidth;
-    const height = 520;
-
-    const svg = d3.select('#architecture-diagram')
-        .append('svg')
-        .attr('viewBox', `0 0 ${width} ${height}`)
+    const svg = d3.select('#diagram').append('svg')
+        .attr('viewBox', `0 0 ${w} ${h}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
 
     const defs = svg.append('defs');
 
-    // Gradients
-    const gPulse = defs.append('linearGradient').attr('id', 'gPulse').attr('x1', '0%').attr('y1', '0%').attr('x2', '100%').attr('y2', '100%');
-    gPulse.append('stop').attr('offset', '0%').attr('stop-color', '#667eea');
-    gPulse.append('stop').attr('offset', '100%').attr('stop-color', '#764ba2');
+    // Arrow
+    defs.append('marker').attr('id', 'arr').attr('viewBox', '0 0 10 10')
+        .attr('refX', 10).attr('refY', 5).attr('markerWidth', 7).attr('markerHeight', 7).attr('orient', 'auto')
+        .append('path').attr('d', 'M0 0 L10 5 L0 10z').attr('fill', '#64748b');
 
-    const gExec = defs.append('linearGradient').attr('id', 'gExec').attr('x1', '0%').attr('y1', '0%').attr('x2', '100%').attr('y2', '100%');
-    gExec.append('stop').attr('offset', '0%').attr('stop-color', '#34d399');
-    gExec.append('stop').attr('offset', '100%').attr('stop-color', '#059669');
+    // Rounded rect helper
+    function box(x, y, bw, bh, fill, stroke, r) {
+        svg.append('rect').attr('x', x).attr('y', y).attr('width', bw).attr('height', bh)
+            .attr('rx', r || 16).attr('fill', fill).attr('stroke', stroke).attr('stroke-width', 1.5);
+    }
+    function label(x, y, text, size, color, weight, anchor) {
+        svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anchor || 'middle')
+            .attr('fill', color).attr('font-size', size).attr('font-weight', weight || 400).text(text);
+    }
+    function arrow(x1, y1, x2, y2, dashed) {
+        const l = svg.append('line').attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
+            .attr('stroke', '#64748b').attr('stroke-width', 1.5).attr('marker-end', 'url(#arr)');
+        if (dashed) l.attr('stroke-dasharray', '5,4');
+    }
 
-    const gShared = defs.append('linearGradient').attr('id', 'gShared').attr('x1', '0%').attr('y1', '0%').attr('x2', '100%').attr('y2', '100%');
-    gShared.append('stop').attr('offset', '0%').attr('stop-color', '#f59e0b');
-    gShared.append('stop').attr('offset', '100%').attr('stop-color', '#d97706');
+    // === LAYOUT ===
+    // Row 1: Developer
+    const devX = cx, devY = 45;
+    // Row 2: Pulse Prana & Execution Flow
+    const ppX = cx - 180, ppY = 170, efX = cx + 180, efY = 170;
+    // Row 3: AI Agent
+    const aiX = cx, aiY = 340;
+    // Row 4: Codebase
+    const codeX = cx, codeY = 450;
 
-    // Arrow marker
-    defs.append('marker').attr('id', 'arrow').attr('viewBox', '0 0 10 10').attr('refX', 10).attr('refY', 5)
-        .attr('markerWidth', 8).attr('markerHeight', 8).attr('orient', 'auto-start-reverse')
-        .append('path').attr('d', 'M 0 0 L 10 5 L 0 10 z').attr('fill', '#94a3b8');
+    // --- Developer ---
+    svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 32)
+        .attr('fill', '#334155').attr('stroke', '#94a3b8').attr('stroke-width', 1.5);
+    label(devX, devY - 4, 'You', 14, '#e2e8f0', 700);
+    label(devX, devY + 12, '(Dev Lead)', 9, '#94a3b8');
 
-    const cx = width / 2;
-
-    // ---- Shared layer (center) ----
-    const sharedY = height / 2;
-    const sharedW = 260, sharedH = 80;
-    svg.append('rect').attr('x', cx - sharedW/2).attr('y', sharedY - sharedH/2).attr('width', sharedW).attr('height', sharedH)
-        .attr('rx', 14).attr('fill', 'url(#gShared)').attr('opacity', 0.15).attr('stroke', '#f59e0b').attr('stroke-width', 1.5);
-    svg.append('text').attr('x', cx).attr('y', sharedY - 8).attr('text-anchor', 'middle').attr('fill', '#f59e0b').attr('font-size', 15).attr('font-weight', 700).text('Shared Infrastructure');
-    svg.append('text').attr('x', cx).attr('y', sharedY + 14).attr('text-anchor', 'middle').attr('fill', '#fbbf24').attr('font-size', 11).text('Google OAuth  |  Vue 3  |  REST APIs');
-
-    // ---- Pulse Prana (top) ----
-    const pulseY = 80;
-    const boxW = 320, boxH = 130;
-
-    // Main box
-    svg.append('rect').attr('x', cx - boxW/2).attr('y', pulseY - boxH/2).attr('width', boxW).attr('height', boxH)
-        .attr('rx', 14).attr('fill', 'url(#gPulse)').attr('opacity', 0.12).attr('stroke', '#818cf8').attr('stroke-width', 1.5);
-    svg.append('text').attr('x', cx).attr('y', pulseY - 30).attr('text-anchor', 'middle').attr('fill', '#818cf8').attr('font-size', 17).attr('font-weight', 700).text('Pulse Prana');
-    svg.append('text').attr('x', cx).attr('y', pulseY - 10).attr('text-anchor', 'middle').attr('fill', '#c7d2fe').attr('font-size', 11).text('Strategic Layer');
-
-    const ppFeatures = ['Projects', 'Roadmap', 'Capabilities', 'Metrics', 'Healing'];
-    ppFeatures.forEach((f, i) => {
-        const fx = cx - 130 + i * 65;
-        svg.append('rect').attr('x', fx).attr('y', pulseY + 8).attr('width', 58).attr('height', 24).attr('rx', 6)
-            .attr('fill', '#818cf8').attr('opacity', 0.2).attr('stroke', '#818cf8').attr('stroke-width', 0.5);
-        svg.append('text').attr('x', fx + 29).attr('y', pulseY + 24).attr('text-anchor', 'middle').attr('fill', '#c7d2fe').attr('font-size', 9).text(f);
+    // --- Pulse Prana ---
+    const bw = 200, bh = 110;
+    box(ppX - bw/2, ppY - bh/2, bw, bh, 'rgba(129,140,248,0.08)', '#818cf8');
+    label(ppX, ppY - 28, 'Pulse Prana', 15, '#818cf8', 700);
+    label(ppX, ppY - 8, '"What to build & why"', 10, '#c7d2fe');
+    const ppItems = ['Projects & Roadmap', 'Status & Milestones', 'AI Healing'];
+    ppItems.forEach((t, i) => {
+        label(ppX, ppY + 14 + i * 15, t, 10, '#94a3b8');
     });
 
-    // ---- Execution Flow (bottom) ----
-    const execY = height - 80;
-
-    svg.append('rect').attr('x', cx - boxW/2).attr('y', execY - boxH/2).attr('width', boxW).attr('height', boxH)
-        .attr('rx', 14).attr('fill', 'url(#gExec)').attr('opacity', 0.12).attr('stroke', '#34d399').attr('stroke-width', 1.5);
-    svg.append('text').attr('x', cx).attr('y', execY - 30).attr('text-anchor', 'middle').attr('fill', '#34d399').attr('font-size', 17).attr('font-weight', 700).text('Execution Flow');
-    svg.append('text').attr('x', cx).attr('y', execY - 10).attr('text-anchor', 'middle').attr('fill', '#86efac').attr('font-size', 11).text('Tactical Layer');
-
-    const efFeatures = ['Gantt', 'Risks', 'Critical Path', 'Phases', 'Teams'];
-    efFeatures.forEach((f, i) => {
-        const fx = cx - 130 + i * 65;
-        svg.append('rect').attr('x', fx).attr('y', execY + 8).attr('width', 58).attr('height', 24).attr('rx', 6)
-            .attr('fill', '#34d399').attr('opacity', 0.2).attr('stroke', '#34d399').attr('stroke-width', 0.5);
-        svg.append('text').attr('x', fx + 29).attr('y', execY + 24).attr('text-anchor', 'middle').attr('fill', '#86efac').attr('font-size', 9).text(f);
+    // --- Execution Flow ---
+    box(efX - bw/2, efY - bh/2, bw, bh, 'rgba(52,211,153,0.08)', '#34d399');
+    label(efX, efY - 28, 'Execution Flow', 15, '#34d399', 700);
+    label(efX, efY - 8, '"How to build & when"', 10, '#86efac');
+    const efItems = ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'];
+    efItems.forEach((t, i) => {
+        label(efX, efY + 14 + i * 15, t, 10, '#94a3b8');
     });
 
-    // ---- Connections ----
-    const arrowStyle = { fill: 'none', stroke: '#94a3b8', 'stroke-width': 1.5, 'marker-end': 'url(#arrow)' };
+    // --- AI Agent ---
+    svg.append('rect').attr('x', aiX - 100).attr('y', aiY - 35).attr('width', 200).attr('height', 70)
+        .attr('rx', 16).attr('fill', 'rgba(245,158,11,0.08)').attr('stroke', '#f59e0b').attr('stroke-width', 1.5);
+    label(aiX, aiY - 10, 'AI Coding Agent', 15, '#f59e0b', 700);
+    label(aiX, aiY + 10, 'Claude Code / Cursor / etc.', 10, '#fbbf24');
 
-    // Pulse -> Shared
-    drawArrow(svg, cx - 60, pulseY + boxH/2, cx - 60, sharedY - sharedH/2, arrowStyle, 'Project data');
-    // Shared -> Exec
-    drawArrow(svg, cx - 60, sharedY + sharedH/2, cx - 60, execY - boxH/2, arrowStyle, 'Plan context');
-    // Exec -> Shared
-    drawArrow(svg, cx + 60, execY - boxH/2, cx + 60, sharedY + sharedH/2, arrowStyle, 'Progress updates');
-    // Shared -> Pulse
-    drawArrow(svg, cx + 60, sharedY - sharedH/2, cx + 60, pulseY + boxH/2, arrowStyle, 'Execution status');
+    // --- Codebase ---
+    svg.append('rect').attr('x', codeX - 80).attr('y', codeY - 22).attr('width', 160).attr('height', 44)
+        .attr('rx', 10).attr('fill', '#334155').attr('stroke', '#64748b').attr('stroke-width', 1);
+    label(codeX, codeY + 5, 'Your Codebase', 12, '#e2e8f0', 600);
 
-    // ---- Side labels ----
-    // Left: Human users
-    const leftX = 50;
-    svg.append('circle').attr('cx', leftX).attr('cy', sharedY).attr('r', 30).attr('fill', '#334155').attr('stroke', '#64748b');
-    svg.append('text').attr('x', leftX).attr('y', sharedY - 4).attr('text-anchor', 'middle').attr('fill', '#e2e8f0').attr('font-size', 20).text('H');
-    svg.append('text').attr('x', leftX).attr('y', sharedY + 12).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 8).text('Human');
-    // Left arrows
-    svg.append('line').attr('x1', leftX + 30).attr('y1', sharedY - 15).attr('x2', cx - boxW/2, ).attr('y2', pulseY + 20)
-        .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
-    svg.append('line').attr('x1', leftX + 30).attr('y1', sharedY + 15).attr('x2', cx - boxW/2).attr('y2', execY - 20)
-        .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
+    // === ARROWS ===
 
-    // Right: AI Agent
-    const rightX = width - 50;
-    svg.append('circle').attr('cx', rightX).attr('cy', sharedY).attr('r', 30).attr('fill', '#334155').attr('stroke', '#64748b');
-    svg.append('text').attr('x', rightX).attr('y', sharedY - 4).attr('text-anchor', 'middle').attr('fill', '#e2e8f0').attr('font-size', 20).text('AI');
-    svg.append('text').attr('x', rightX).attr('y', sharedY + 12).attr('text-anchor', 'middle').attr('fill', '#94a3b8').attr('font-size', 8).text('Agent');
-    svg.append('line').attr('x1', rightX - 30).attr('y1', sharedY - 15).attr('x2', cx + boxW/2).attr('y2', pulseY + 20)
-        .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
-    svg.append('line').attr('x1', rightX - 30).attr('y1', sharedY + 15).attr('x2', cx + boxW/2).attr('y2', execY - 20)
-        .attr('stroke', '#64748b').attr('stroke-width', 1).attr('stroke-dasharray', '4,4');
-}
+    // Dev -> Pulse Prana: "Define goals"
+    arrow(devX - 20, devY + 32, ppX + 20, ppY - bh/2);
+    label(ppX - 40, ppY - bh/2 - 18, 'Define goals &', 9, '#c7d2fe', 400, 'end');
+    label(ppX - 40, ppY - bh/2 - 6, 'track progress', 9, '#c7d2fe', 400, 'end');
 
-function drawArrow(svg, x1, y1, x2, y2, style, label) {
-    svg.append('line')
-        .attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
-        .attr('fill', style.fill).attr('stroke', style.stroke)
-        .attr('stroke-width', style['stroke-width'])
-        .attr('marker-end', style['marker-end']);
+    // Dev -> Execution Flow: "Plan execution"
+    arrow(devX + 20, devY + 32, efX - 20, efY - bh/2);
+    label(efX + 40, efY - bh/2 - 18, 'Plan tasks &', 9, '#86efac', 400, 'start');
+    label(efX + 40, efY - bh/2 - 6, 'team allocation', 9, '#86efac', 400, 'start');
 
-    const mx = (x1 + x2) / 2;
-    const my = (y1 + y2) / 2;
-    const isLeft = x1 < x2 || (x1 === x2 && x1 < 400);
+    // Pulse Prana <-> Execution Flow
+    arrow(ppX + bw/2, ppY, efX - bw/2, efY);
+    label(cx, ppY - 12, 'Shared project context', 9, '#94a3b8');
 
-    svg.append('text')
-        .attr('x', mx + (isLeft ? -10 : 10))
-        .attr('y', my)
-        .attr('text-anchor', isLeft ? 'end' : 'start')
-        .attr('fill', '#94a3b8')
-        .attr('font-size', 9)
-        .text(label);
-}
+    // Pulse Prana -> AI Agent: "API: project data"
+    arrow(ppX, ppY + bh/2, aiX - 40, aiY - 35);
+    label(ppX - 50, ppY + bh/2 + 35, '/api/know-me', 9, '#818cf8', 600, 'middle');
 
-// ========================================
-// Init
-// ========================================
-renderMockups();
-renderArchitectureDiagram();
+    // Execution Flow -> AI Agent: "API: execution plan"
+    arrow(efX, efY + bh/2, aiX + 40, aiY - 35);
+    label(efX + 50, efY + bh/2 + 35, '/api/execution-plan', 9, '#34d399', 600, 'middle');
+
+    // AI Agent -> Codebase: "Writes code"
+    arrow(aiX, aiY + 35, codeX, codeY - 22);
+    label(aiX + 60, aiY + 55, 'Writes informed code', 10, '#fbbf24', 400, 'start');
+
+    // Codebase -> Dev (feedback loop, dashed)
+    arrow(codeX - 80, codeY, devX - 60, devY + 30, true);
+    label(codeX - 160, codeY - 40, 'Review &', 9, '#64748b', 400, 'middle');
+    label(codeX - 160, codeY - 28, 'iterate', 9, '#64748b', 400, 'middle');
+
+})();
 </script>
 
 </body>
