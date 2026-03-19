@@ -88,6 +88,51 @@
         .ep-card .c-exec { color: #6ee7b7; }
         .ep-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
 
+        .btn-agent-instructions {
+            margin-top: 1.5rem; padding: 0.6rem 1.4rem; border-radius: 999px;
+            border: 1px dashed var(--border); background: transparent; color: var(--text-dim);
+            font-size: 0.85rem; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-agent-instructions:hover { border-color: var(--pulse); color: var(--pulse); }
+
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 1000; justify-content: center; align-items: center; padding: 2rem;
+        }
+        .modal-box {
+            background: var(--bg); border: 1px solid var(--border); border-radius: 1rem;
+            max-width: 800px; width: 100%; max-height: 85vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+        }
+        .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
+        .modal-actions { display: flex; gap: 0.5rem; }
+        .modal-btn {
+            padding: 0.4rem 1rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 600;
+            cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+            transition: all 0.15s;
+        }
+        .modal-btn:hover { border-color: var(--pulse); }
+        .modal-btn.primary { background: var(--pulse); color: white; border-color: var(--pulse); }
+        .modal-btn.primary:hover { opacity: 0.9; }
+        .modal-btn.close { background: none; border: none; font-size: 1.2rem; color: var(--text-dim); padding: 0.2rem 0.5rem; }
+        .modal-body { overflow-y: auto; padding: 1.5rem; flex: 1; }
+        .modal-body pre {
+            background: #1e293b; color: #e2e8f0; padding: 1.25rem; border-radius: 0.75rem;
+            font-size: 0.8rem; line-height: 1.7; white-space: pre-wrap; word-wrap: break-word;
+            font-family: 'Fira Code', 'Courier New', monospace; overflow-x: auto;
+        }
+        .copy-toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #059669; color: white; padding: 0.6rem 1.5rem; border-radius: 999px;
+            font-size: 0.85rem; font-weight: 600; z-index: 1001; opacity: 0; transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .copy-toast.show { opacity: 1; }
+
         footer { text-align: center; padding: 3rem 2rem; color: var(--text-dim); font-size: 0.85rem; border-top: 1px solid var(--border); }
         footer a { color: var(--pulse); text-decoration: none; }
 
@@ -111,6 +156,9 @@
         <a href="https://nstarx.myddns.me/execution/" class="btn-exec">Execution Flow</a>
         <a href="#how-it-works" class="btn-outline">How It Works</a>
     </div>
+    <button class="btn-agent-instructions" onclick="document.getElementById('agent-modal').style.display='flex'">
+        🤖 Agent Instructions (copy &amp; paste to your AI)
+    </button>
 </section>
 
 <!-- Story: Pulse Prana -->
@@ -279,6 +327,25 @@
     </div>
 </div>
 
+<!-- Agent Instructions Modal -->
+<div class="modal-overlay" id="agent-modal" onclick="if(event.target===this)this.style.display='none'">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3>🤖 Agent Instructions</h3>
+            <div class="modal-actions">
+                <button class="modal-btn" onclick="downloadInstructions()">Download .txt</button>
+                <button class="modal-btn primary" onclick="copyInstructions()">Copy All</button>
+                <button class="modal-btn close" onclick="document.getElementById('agent-modal').style.display='none'">&times;</button>
+            </div>
+        </div>
+        <div class="modal-body">
+            <p style="color:var(--text-dim);font-size:0.85rem;margin-bottom:1rem;">Copy this text and paste it into Claude Code, Cursor, or any AI coding agent to give it full context about your platform.</p>
+            <pre id="agent-text"></pre>
+        </div>
+    </div>
+</div>
+<div class="copy-toast" id="copy-toast">Copied to clipboard!</div>
+
 <footer>
     <p>NStar X Inc. &middot; <a href="https://github.com/nstarx/nstarx-dev-agents-platform">Source on GitHub</a></p>
 </footer>
@@ -433,6 +500,29 @@
     txt(50, devY + 172, 'iterate', 10, '#94a3b8', 400, 'start');
 
 })();
+
+// Load agent instructions
+fetch('agent-instructions.txt').then(r => r.text()).then(t => {
+    document.getElementById('agent-text').textContent = t;
+});
+
+function copyInstructions() {
+    const text = document.getElementById('agent-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+}
+
+function downloadInstructions() {
+    const text = document.getElementById('agent-text').textContent;
+    const blob = new Blob([text], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'nstarx-agent-instructions.txt';
+    a.click();
+}
 </script>
 
 </body>

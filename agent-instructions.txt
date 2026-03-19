@@ -1,0 +1,124 @@
+NStar X Dev Agents Platform - Instructions for AI Coding Agents
+================================================================
+
+You have access to three services that give you full context about the projects you're working on.
+Use these APIs to understand what to build, how it connects to other work, and what to prioritize.
+
+
+1. PULSE PRANA - Project Management & Roadmap
+----------------------------------------------
+Purpose: Strategic layer. Tracks projects, capabilities, milestones, and status.
+Base URL: https://nstarx.myddns.me/pulse/api
+Auth: X-API-Key header or Authorization: Bearer <key>
+
+Key endpoints:
+  GET  /know-me              → Full service description (start here!)
+  GET  /projects             → List all projects
+  GET  /capabilities         → Project capabilities & progress
+  GET  /roadmap/:id/timeline → Visual roadmap timeline
+  GET  /project-status       → Current project status with metrics
+  GET  /healing/health       → AI-powered project health check
+  POST /healing/heal/:id     → Auto-fix project inconsistencies
+  GET  /health               → Service health (no auth needed)
+
+Example:
+  curl -H "X-API-Key: <key>" https://nstarx.myddns.me/pulse/api/projects
+
+What you get: project names, descriptions, capabilities with completion %,
+milestones, phase tracking, recommended next steps, critical gaps.
+
+
+2. OCTOPUS - Project Monitor & Orchestrator
+---------------------------------------------
+Purpose: Orchestration layer. Monitors 100+ Claude Code projects, manages
+dependencies as a mesh, tracks git status, and manages prompts/tasks.
+Base URL: http://localhost:8000/api
+Auth: None required for local access
+
+Key endpoints:
+  GET  /projects             → All monitored projects with git status
+  GET  /projects/<name>      → Single project details
+  GET  /projects/<name>/git  → Git status (uncommitted changes, branch)
+  POST /projects/scan        → Scan filesystem for new projects
+  GET  /mesh/nodes           → Project dependency graph nodes
+  GET  /mesh/dependencies    → All dependency links with friction levels
+  GET  /mesh/nodes/<id>/cascade → Cascade propagation events
+  GET  /execution-tasks      → All execution tasks
+  GET  /subtasks             → All subtasks across projects
+  GET  /prompt-templates     → Reusable prompt library
+  POST /projects/<name>/report → Generate implementation report
+
+Example:
+  curl http://localhost:8000/api/projects
+  curl http://localhost:8000/api/mesh/dependencies
+
+What you get: real-time project state, which projects depend on each other,
+cascade events when dependencies change, task assignments, prompt templates.
+
+Dependency types:
+  HARD    (friction 0.0-0.3) → Immediate cascade, blocking
+  SOFT    (friction 0.3-0.7) → Queued cascade, can delay
+  CONTEXT (friction 0.7-1.0) → Conditional, based on analysis
+
+
+3. EXECUTION FLOW - Execution Planning & Task Breakdown
+---------------------------------------------------------
+Purpose: Tactical layer. Transforms requirements into time-bound execution
+plans with team scenarios, risk analysis, and critical path.
+Base URL: https://nstarx.myddns.me/execution/api
+Auth: API key via X-API-Key header or ?api_key= query param
+
+Key endpoints:
+  GET  /health                        → Service health
+  GET  /projects                      → Available projects
+  GET  /execution-plan                → Full execution plan
+  GET  /execution-plan/overview       → Summary (hours, tasks, phases)
+  GET  /execution-plan/tasks          → All tasks with filtering
+  GET  /execution-plan/phases         → Phase breakdown
+  GET  /execution-plan/team-scenarios → Team size options with timelines
+  GET  /execution-plan/risks          → Risk factors with impact ranges
+  GET  /execution-plan/critical-path  → Tasks that determine timeline
+  GET  /execution-plan/strategy       → Parallel vs sequential phases
+  GET  /execution-plan/metrics        → Success metrics
+
+Example:
+  curl https://nstarx.myddns.me/execution/api/execution-plan
+
+What you get: 20 tasks across 9 phases, 4 team scenarios (solo to sprint),
+6 risk factors with severity, 7 critical path tasks, effort estimates.
+
+
+HOW TO USE THESE TOGETHER
+==========================
+
+Recommended workflow when starting work on a project:
+
+1. Check Pulse Prana for the big picture:
+   → GET /pulse/api/projects to find your project
+   → GET /pulse/api/project-status for current state and recommended path
+
+2. Check Octopus for dependencies and context:
+   → GET /api/projects/<name>/git for current git state
+   → GET /api/mesh/dependencies to see what this project depends on
+   → GET /api/subtasks for assigned work items
+
+3. Check Execution Flow for task priorities:
+   → GET /execution/api/execution-plan/critical-path for what matters most
+   → GET /execution/api/execution-plan/risks for what could go wrong
+
+4. Write code with full context, then:
+   → Octopus hooks automatically detect your changes
+   → Dependencies cascade to affected projects
+   → Status updates flow back to Pulse Prana
+
+
+QUICK START
+============
+
+To get full context in one shot, fetch the know-me endpoint:
+
+  curl https://nstarx.myddns.me/pulse/api/know-me
+
+This returns a comprehensive plain-text description of the entire Pulse Prana
+service: all endpoints, data models, auth methods, and usage patterns.
+Feed this to your AI agent and it will know how to interact with everything.
