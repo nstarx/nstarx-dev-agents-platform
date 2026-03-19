@@ -88,28 +88,40 @@ What you get: 20 tasks across 9 phases, 4 team scenarios (solo to sprint),
 6 risk factors with severity, 7 critical path tasks, effort estimates.
 
 
-HOW TO USE THESE TOGETHER
-==========================
+HOW THEY WORK TOGETHER
+=======================
+
+The main flow goes through Octopus:
+
+  Pulse Prana (goals/status) ──┐
+                               ├──→ Octopus (consolidates) ──→ Claude Code (via tmux)
+  Execution Flow (tasks/risk) ─┘
+
+1. You define goals in Pulse Prana and plan tasks in Execution Flow
+2. Octopus pulls from both, consolidates context, and manages dependencies
+3. Octopus sends consolidated prompts to Claude Code agents via tmux
+4. Claude Code writes code in your codebase
+5. Octopus hooks detect changes and cascade to dependent projects
+6. You review and iterate
+
+AI agents CAN also query Pulse Prana and Execution Flow directly for
+additional context, but Octopus is the primary orchestrator.
 
 Recommended workflow when starting work on a project:
 
-1. Check Pulse Prana for the big picture:
-   → GET /pulse/api/projects to find your project
-   → GET /pulse/api/project-status for current state and recommended path
+1. Octopus sends you the consolidated context (automatic)
+   → Or check GET /api/projects/<name>/git for current git state
+   → And GET /api/mesh/dependencies for what depends on this project
 
-2. Check Octopus for dependencies and context:
-   → GET /api/projects/<name>/git for current git state
-   → GET /api/mesh/dependencies to see what this project depends on
-   → GET /api/subtasks for assigned work items
-
-3. Check Execution Flow for task priorities:
-   → GET /execution/api/execution-plan/critical-path for what matters most
+2. For more context, query directly:
+   → GET /pulse/api/project-status for strategic view
+   → GET /execution/api/execution-plan/critical-path for priorities
    → GET /execution/api/execution-plan/risks for what could go wrong
 
-4. Write code with full context, then:
-   → Octopus hooks automatically detect your changes
-   → Dependencies cascade to affected projects
-   → Status updates flow back to Pulse Prana
+3. Write code, then Octopus automatically:
+   → Detects your changes via hooks
+   → Cascades updates to dependent projects
+   → Syncs status back to Pulse Prana
 
 
 QUICK START

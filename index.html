@@ -232,14 +232,14 @@
 
     <div class="story" id="octopus">
         <div class="story-text octo">
-            <h3>Orchestrate your AI agents <span class="badge badge-octo">Octopus</span></h3>
-            <p>The nerve center between your project tools and Claude Code. Octopus monitors 100+ projects in real-time, tracks git status, manages dependencies as a mesh, and feeds context to your AI coding agents.</p>
+            <h3>The brain that coordinates everything <span class="badge badge-octo">Octopus</span></h3>
+            <p>Octopus pulls context from Pulse Prana and Execution Flow, consolidates it, and actively dispatches prompts to Claude Code agents via tmux. It's the orchestrator that turns strategic plans into running AI coding sessions.</p>
             <ul>
-                <li>Real-time monitoring of all Claude Code projects</li>
+                <li>Consolidates data from Pulse Prana &amp; Execution Flow</li>
+                <li>Sends prompts to Claude Code agents via tmux</li>
                 <li>Project mesh with dependency graph &amp; cascade propagation</li>
                 <li>Prompt factory with hierarchical prompt management</li>
-                <li>Bidirectional sync with Pulse Prana</li>
-                <li>Distributed collectors across multiple machines</li>
+                <li>Monitors 100+ projects with real-time git status</li>
                 <li>Claude Code hook integration (session lifecycle)</li>
             </ul>
         </div>
@@ -299,8 +299,20 @@
     <!-- D3 Architecture Diagram -->
     <div class="diagram-wrap" id="architecture">
         <h3>How the Three Services Work Together</h3>
-        <p>You define goals in Pulse Prana. Octopus monitors your projects, manages dependencies, and orchestrates context. Execution Flow breaks work into tasks. Your AI agent gets everything it needs via API.</p>
+        <p>You define goals in Pulse Prana and plan tasks in Execution Flow. Octopus pulls from both, consolidates the context, and actively sends prompts to your Claude Code agents via tmux. Agents can also query Pulse Prana and Execution Flow directly.</p>
         <div id="diagram"></div>
+    </div>
+
+    <!-- D3 Simulation -->
+    <div class="diagram-wrap" id="simulation" style="margin-top:2.5rem;">
+        <h3>Live Workflow Simulation</h3>
+        <p>Watch how a task flows from planning to code. Click <strong>Play</strong> to see the full cycle.</p>
+        <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;">
+            <button class="modal-btn primary" id="sim-play" onclick="startSimulation()">&#9654; Play</button>
+            <button class="modal-btn" id="sim-reset" onclick="resetSimulation()">Reset</button>
+            <span id="sim-status" style="font-size:0.85rem;color:var(--text-dim);align-self:center;"></span>
+        </div>
+        <div id="sim-diagram"></div>
     </div>
 
     <!-- Agent section -->
@@ -352,7 +364,7 @@
 
 <script>
 (function() {
-    const W = 940, H = 620;
+    const W = 940, H = 640;
     const svg = d3.select('#diagram').append('svg')
         .attr('viewBox', `0 0 ${W} ${H}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
@@ -382,123 +394,230 @@
         svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 12).attr('fill', col).attr('opacity', 0.9);
         svg.append('text').attr('x', x).attr('y', y + 4).attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-size', 11).attr('font-weight', 700).text(n);
     }
-    function box(x, y, w, h, fill, stroke) {
+    function box(x, y, w, h, fill, stroke, sw) {
         svg.append('rect').attr('x', x - w/2).attr('y', y - h/2).attr('width', w).attr('height', h)
-            .attr('rx', 16).attr('fill', fill).attr('stroke', stroke).attr('stroke-width', 2);
+            .attr('rx', 16).attr('fill', fill).attr('stroke', stroke).attr('stroke-width', sw || 2);
     }
 
     const cx = W / 2;
 
-    // === ROW 1: Developer ===
+    // === ROW 1: Developer (top) ===
     const devX = cx, devY = 50;
     svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 34).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 2);
     svg.append('text').attr('x', devX).attr('y', devY + 2).attr('text-anchor', 'middle').attr('font-size', 26).text('👨‍💻');
     txt(devX, devY + 50, 'You (Dev Lead)', 13, '#1e293b', 600);
 
-    // === ROW 2: Three Services ===
-    const row2Y = 210, bw = 200, bh = 105;
+    // === ROW 2: Data Sources (PP left, EF right) ===
+    const srcY = 185, bw = 190, bh = 90;
 
-    // Pulse Prana (left)
-    const ppX = 145;
-    box(ppX, row2Y, bw, bh, 'rgba(99,102,241,0.04)', '#6366f1');
-    txt(ppX, row2Y - 28, 'Pulse Prana', 15, '#6366f1', 700);
-    txt(ppX, row2Y - 10, 'What to build & why', 10, '#818cf8');
-    ['Projects & Roadmap', 'Status & Milestones', 'AI Healing'].forEach((t, i) => txt(ppX, row2Y + 10 + i * 16, t, 10));
+    const ppX = 135;
+    box(ppX, srcY, bw, bh, 'rgba(99,102,241,0.04)', '#6366f1');
+    txt(ppX, srcY - 22, 'Pulse Prana', 14, '#6366f1', 700);
+    txt(ppX, srcY - 4, 'What to build & why', 9, '#818cf8');
+    ['Projects & Roadmap', 'Status & Milestones'].forEach((t, i) => txt(ppX, srcY + 16 + i * 15, t, 10));
 
-    // Octopus (center)
-    const ocX = cx;
-    box(ocX, row2Y, bw + 20, bh, 'rgba(234,88,12,0.04)', '#ea580c');
-    txt(ocX, row2Y - 28, '🐙 Octopus', 15, '#ea580c', 700);
-    txt(ocX, row2Y - 10, 'Orchestration layer', 10, '#fb923c');
-    ['Project Mesh & Dependencies', 'Prompt Factory & Tasks', 'Claude Code Hooks'].forEach((t, i) => txt(ocX, row2Y + 10 + i * 16, t, 10));
+    const efX = W - 135;
+    box(efX, srcY, bw, bh, 'rgba(5,150,105,0.04)', '#059669');
+    txt(efX, srcY - 22, 'Execution Flow', 14, '#059669', 700);
+    txt(efX, srcY - 4, 'How to build & when', 9, '#34d399');
+    ['Tasks & Critical Path', 'Risk & Team Scenarios'].forEach((t, i) => txt(efX, srcY + 16 + i * 15, t, 10));
 
-    // Execution Flow (right)
-    const efX = W - 145;
-    box(efX, row2Y, bw, bh, 'rgba(5,150,105,0.04)', '#059669');
-    txt(efX, efX && row2Y - 28, 'Execution Flow', 15, '#059669', 700);
-    txt(efX, row2Y - 10, 'How to build & when', 10, '#34d399');
-    ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'].forEach((t, i) => txt(efX, row2Y + 10 + i * 16, t, 10));
+    // === ROW 3: OCTOPUS (center, bigger - the hub) ===
+    const ocX = cx, ocY = 340, ocW = 280, ocH = 110;
+    box(ocX, ocY, ocW, ocH, 'rgba(234,88,12,0.05)', '#ea580c', 2.5);
+    txt(ocX, ocY - 32, '🐙 Octopus', 17, '#ea580c', 700);
+    txt(ocX, ocY - 12, 'Central Orchestrator', 11, '#fb923c', 600);
+    ['Pulls from PP & EF, consolidates context', 'Sends prompts to agents via tmux', 'Manages mesh, cascades & hooks'].forEach((t, i) =>
+        txt(ocX, ocY + 10 + i * 16, t, 10));
 
-    // === ROW 3: AI Agent ===
-    const aiX = cx, aiY = 400, aiW = 240, aiH = 68;
+    // === ROW 4: AI Agent ===
+    const aiX = cx, aiY = 490, aiW = 230, aiH = 62;
     box(aiX, aiY, aiW, aiH, 'rgba(217,119,6,0.04)', '#d97706');
-    txt(aiX, aiY - 10, 'AI Coding Agent', 15, '#d97706', 700);
-    txt(aiX, aiY + 10, 'Claude Code  ·  Cursor  ·  Windsurf', 10, '#b45309');
+    txt(aiX, aiY - 8, 'Claude Code Agent', 14, '#d97706', 700);
+    txt(aiX, aiY + 10, 'via tmux session', 10, '#b45309');
 
-    // === ROW 4: Codebase ===
-    const codeX = cx, codeY = 510, codeW = 180, codeH = 44;
+    // === ROW 5: Codebase ===
+    const codeX = cx, codeY = 590, codeW = 170, codeH = 42;
     svg.append('rect').attr('x', codeX - codeW/2).attr('y', codeY - codeH/2).attr('width', codeW).attr('height', codeH)
         .attr('rx', 10).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 1.5);
-    txt(codeX, codeY + 5, '📁  Your Codebase', 13, '#1e293b', 600);
+    txt(codeX, codeY + 5, '📁  Your Codebase', 12, '#1e293b', 600);
 
     // === ARROWS ===
 
-    // 1: Dev -> Pulse Prana
-    curve([[devX - 20, devY + 34], [devX - 100, devY + 80], [ppX + 30, row2Y - bh/2]], '#6366f1', 'arr-p');
-    badge(devX - 80, devY + 72, '1', '#6366f1');
-    txt(devX - 145, devY + 85, 'Define goals', 10, '#6366f1', 600, 'end');
+    // 1: Dev -> PP (define goals)
+    curve([[devX - 20, devY + 34], [devX - 90, devY + 70], [ppX + 30, srcY - bh/2]], '#6366f1', 'arr-p');
+    badge(devX - 75, devY + 62, '1', '#6366f1');
+    txt(devX - 135, devY + 78, 'Define goals', 10, '#6366f1', 600, 'end');
 
-    // 1: Dev -> Octopus
-    curve([[devX, devY + 34], [devX, devY + 80], [ocX, row2Y - bh/2]], '#ea580c', 'arr-o');
-    txt(devX + 55, devY + 80, 'Monitor', 10, '#ea580c', 600, 'start');
+    // 1: Dev -> EF (plan tasks)
+    curve([[devX + 20, devY + 34], [devX + 90, devY + 70], [efX - 30, srcY - bh/2]], '#059669', 'arr-e');
+    badge(devX + 75, devY + 62, '1', '#059669');
+    txt(devX + 135, devY + 78, 'Plan tasks', 10, '#059669', 600, 'start');
 
-    // 1: Dev -> Execution Flow
-    curve([[devX + 20, devY + 34], [devX + 100, devY + 80], [efX - 30, row2Y - bh/2]], '#059669', 'arr-e');
-    badge(devX + 80, devY + 72, '1', '#059669');
-    txt(devX + 145, devY + 85, 'Plan tasks', 10, '#059669', 600, 'start');
+    // 2: PP -> Octopus (pulls data)
+    curve([[ppX, srcY + bh/2 + 2], [ppX + 60, srcY + bh/2 + 40], [ocX - 80, ocY - ocH/2]], '#6366f1', 'arr-p');
+    badge(ppX + 30, srcY + bh/2 + 30, '2', '#ea580c');
+    txt(ppX - 20, srcY + bh/2 + 38, 'Octopus pulls', 9, '#ea580c', 600, 'end');
 
-    // 2: Pulse <-> Octopus (bidirectional sync)
-    curve([[ppX + bw/2 + 2, row2Y - 15], [ppX + bw/2 + 30, row2Y - 30], [ocX - bw/2 - 12, row2Y - 15]], '#6366f1', 'arr-p');
-    curve([[ocX - bw/2 - 12, row2Y + 15], [ppX + bw/2 + 30, row2Y + 30], [ppX + bw/2 + 2, row2Y + 15]], '#ea580c', 'arr-o');
-    badge((ppX + ocX) / 2, row2Y - 38, '2', '#94a3b8');
-    txt((ppX + ocX) / 2, row2Y - 52, 'Sync', 10, '#64748b', 600);
+    // 2: EF -> Octopus (pulls data)
+    curve([[efX, srcY + bh/2 + 2], [efX - 60, srcY + bh/2 + 40], [ocX + 80, ocY - ocH/2]], '#059669', 'arr-e');
+    badge(efX - 30, srcY + bh/2 + 30, '2', '#ea580c');
+    txt(efX + 20, srcY + bh/2 + 38, 'Octopus pulls', 9, '#ea580c', 600, 'start');
 
-    // 2: Octopus <-> Execution Flow
-    curve([[ocX + bw/2 + 12, row2Y - 15], [efX - bw/2 - 30, row2Y - 30], [efX - bw/2 - 2, row2Y - 15]], '#ea580c', 'arr-o');
-    curve([[efX - bw/2 - 2, row2Y + 15], [efX - bw/2 - 30, row2Y + 30], [ocX + bw/2 + 12, row2Y + 15]], '#059669', 'arr-e');
-    badge((ocX + efX) / 2, row2Y - 38, '2', '#94a3b8');
-    txt((ocX + efX) / 2, row2Y - 52, 'Sync', 10, '#64748b', 600);
+    // 3: Octopus -> AI Agent (main flow, thick)
+    curve([[ocX, ocY + ocH/2 + 2], [ocX, ocY + ocH/2 + 25], [aiX, aiY - aiH/2]], '#ea580c', 'arr-o');
+    svg.append('path').attr('d', d3.line().curve(d3.curveBasis)([[ocX, ocY + ocH/2 + 2], [ocX, ocY + ocH/2 + 25], [aiX, aiY - aiH/2]]))
+        .attr('fill', 'none').attr('stroke', '#ea580c').attr('stroke-width', 4).attr('opacity', 0.15);
+    badge(ocX + 30, ocY + ocH/2 + 20, '3', '#ea580c');
+    txt(ocX + 65, ocY + ocH/2 + 24, 'Sends consolidated', 10, '#ea580c', 700, 'start');
+    txt(ocX + 65, ocY + ocH/2 + 38, 'prompts via tmux', 10, '#ea580c', 600, 'start');
 
-    // 3: All three -> AI Agent
-    curve([[ppX, row2Y + bh/2 + 2], [ppX + 50, row2Y + bh/2 + 55], [aiX - 70, aiY - aiH/2]], '#6366f1', 'arr-p');
-    badge(ppX + 15, row2Y + bh/2 + 42, '3', '#6366f1');
-    txt(ppX - 30, row2Y + bh/2 + 55, '/api/know-me', 9, '#6366f1', 700, 'end');
+    // 3 (optional): PP -> AI & EF -> AI (dashed, direct access)
+    curve([[ppX - bw/2 + 10, srcY + bh/2], [ppX - bw/2 - 20, srcY + bh/2 + 100], [aiX - aiW/2 - 5, aiY - 10]], '#6366f1', 'arr-p', true);
+    txt(ppX - bw/2 - 45, srcY + bh/2 + 80, 'direct', 8, '#94a3b8', 400, 'end');
+    txt(ppX - bw/2 - 45, srcY + bh/2 + 92, 'access', 8, '#94a3b8', 400, 'end');
 
-    curve([[ocX, row2Y + bh/2 + 2], [ocX, row2Y + bh/2 + 40], [aiX, aiY - aiH/2]], '#ea580c', 'arr-o');
-    badge(ocX + 25, row2Y + bh/2 + 30, '3', '#ea580c');
-    txt(ocX + 55, row2Y + bh/2 + 35, '/api/projects', 9, '#ea580c', 700, 'start');
-
-    curve([[efX, row2Y + bh/2 + 2], [efX - 50, row2Y + bh/2 + 55], [aiX + 70, aiY - aiH/2]], '#059669', 'arr-e');
-    badge(efX - 15, row2Y + bh/2 + 42, '3', '#059669');
-    txt(efX + 30, row2Y + bh/2 + 55, '/api/execution-plan', 9, '#059669', 700, 'start');
+    curve([[efX + bw/2 - 10, srcY + bh/2], [efX + bw/2 + 20, srcY + bh/2 + 100], [aiX + aiW/2 + 5, aiY - 10]], '#059669', 'arr-e', true);
+    txt(efX + bw/2 + 45, srcY + bh/2 + 80, 'direct', 8, '#94a3b8', 400, 'start');
+    txt(efX + bw/2 + 45, srcY + bh/2 + 92, 'access', 8, '#94a3b8', 400, 'start');
 
     // 4: AI Agent -> Codebase
-    curve([[aiX, aiY + aiH/2 + 2], [aiX, aiY + aiH/2 + 20], [codeX, codeY - codeH/2 - 2]], '#d97706', 'arr-w');
-    badge(aiX + 28, aiY + aiH/2 + 16, '4', '#d97706');
-    txt(aiX + 70, aiY + aiH/2 + 20, 'Writes informed code', 10, '#b45309', 600, 'start');
+    curve([[aiX, aiY + aiH/2 + 2], [aiX, aiY + aiH/2 + 18], [codeX, codeY - codeH/2 - 2]], '#d97706', 'arr-w');
+    badge(aiX + 28, aiY + aiH/2 + 14, '4', '#d97706');
+    txt(aiX + 68, aiY + aiH/2 + 18, 'Writes code', 10, '#b45309', 600, 'start');
 
-    // 5: Codebase -> Octopus (hooks detect changes) - dashed loop on right
+    // 5: Codebase -> Octopus (hooks) - right loop
     curve([
-        [codeX + codeW/2, codeY],
-        [W - 40, codeY - 20],
-        [W - 30, row2Y + 60],
-        [ocX + bw/2 + 12, row2Y + 30]
+        [codeX + codeW/2, codeY - 5],
+        [W - 50, codeY - 20],
+        [W - 40, ocY + 30],
+        [ocX + ocW/2 + 2, ocY + 15]
     ], '#94a3b8', 'arr', true);
-    badge(W - 35, row2Y + 120, '5', '#94a3b8');
-    txt(W - 18, row2Y + 140, 'Hooks', 10, '#94a3b8', 400, 'start');
-    txt(W - 18, row2Y + 154, 'detect', 10, '#94a3b8', 400, 'start');
+    badge(W - 42, ocY + 80, '5', '#94a3b8');
+    txt(W - 22, ocY + 100, 'Hooks', 9, '#94a3b8', 400, 'start');
 
-    // 6: Codebase -> Dev (review loop) - dashed on left
+    // 6: Codebase -> Dev (review) - left loop
     curve([
-        [codeX - codeW/2, codeY],
-        [40, codeY - 20],
-        [30, devY + 70],
-        [devX - 34, devY + 8]
+        [codeX - codeW/2, codeY - 5],
+        [45, codeY - 20],
+        [35, devY + 60],
+        [devX - 34, devY + 6]
     ], '#94a3b8', 'arr', true);
-    badge(32, devY + 140, '6', '#94a3b8');
-    txt(50, devY + 158, 'Review &', 10, '#94a3b8', 400, 'start');
-    txt(50, devY + 172, 'iterate', 10, '#94a3b8', 400, 'start');
+    badge(38, devY + 130, '6', '#94a3b8');
+    txt(56, devY + 148, 'Review', 9, '#94a3b8', 400, 'start');
 
+})();
+
+// === SIMULATION ===
+(function() {
+    const W = 900, H = 160;
+    const svg = d3.select('#sim-diagram').append('svg')
+        .attr('viewBox', `0 0 ${W} ${H}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet');
+
+    const nodes = [
+        { id: 'dev',   x: 60,  y: 80, label: '👨‍💻 Dev',          color: '#64748b', w: 80 },
+        { id: 'pulse', x: 210, y: 80, label: 'Pulse Prana',     color: '#6366f1', w: 110 },
+        { id: 'exec',  x: 370, y: 80, label: 'Execution Flow',  color: '#059669', w: 120 },
+        { id: 'octo',  x: 540, y: 80, label: '🐙 Octopus',      color: '#ea580c', w: 110 },
+        { id: 'agent', x: 700, y: 80, label: 'Claude Code',     color: '#d97706', w: 110 },
+        { id: 'code',  x: 850, y: 80, label: '📁 Codebase',     color: '#475569', w: 100 },
+    ];
+
+    // Draw nodes
+    nodes.forEach(n => {
+        svg.append('rect')
+            .attr('x', n.x - n.w/2).attr('y', n.y - 24).attr('width', n.w).attr('height', 48)
+            .attr('rx', 12).attr('fill', 'white').attr('stroke', n.color).attr('stroke-width', 2)
+            .attr('id', `sim-node-${n.id}`);
+        svg.append('text')
+            .attr('x', n.x).attr('y', n.y + 5).attr('text-anchor', 'middle')
+            .attr('fill', n.color).attr('font-size', 11).attr('font-weight', 600).text(n.label);
+    });
+
+    // Connection lines (faded)
+    const links = [
+        [0,1], [1,2], [1,3], [2,3], [3,4], [4,5]
+    ];
+    links.forEach(([a, b]) => {
+        svg.append('line')
+            .attr('x1', nodes[a].x + nodes[a].w/2).attr('y1', nodes[a].y)
+            .attr('x2', nodes[b].x - nodes[b].w/2).attr('y2', nodes[b].y)
+            .attr('stroke', '#e2e8f0').attr('stroke-width', 1.5)
+            .attr('class', 'sim-link');
+    });
+
+    // Particle for animation
+    const particle = svg.append('circle')
+        .attr('r', 8).attr('fill', '#ea580c').attr('opacity', 0)
+        .attr('filter', 'url(#glow)');
+
+    const statusEl = document.getElementById('sim-status');
+
+    const steps = [
+        { from: 'dev', to: 'pulse', color: '#6366f1', text: '1. Dev defines project goals in Pulse Prana' },
+        { from: 'dev', to: 'exec',  color: '#059669', text: '2. Dev creates execution plan in Execution Flow' },
+        { from: 'pulse', to: 'octo', color: '#ea580c', text: '3. Octopus pulls project status from Pulse Prana' },
+        { from: 'exec', to: 'octo',  color: '#ea580c', text: '4. Octopus pulls tasks & risks from Execution Flow' },
+        { from: 'octo', to: 'agent', color: '#ea580c', text: '5. Octopus sends consolidated prompt via tmux' },
+        { from: 'agent', to: 'code', color: '#d97706', text: '6. Claude Code writes informed code' },
+        { from: 'code', to: 'octo',  color: '#94a3b8', text: '7. Hooks detect changes, cascade to dependencies' },
+    ];
+
+    let animating = false;
+
+    window.startSimulation = async function() {
+        if (animating) return;
+        animating = true;
+        document.getElementById('sim-play').disabled = true;
+        resetHighlights();
+
+        for (const step of steps) {
+            const from = nodes.find(n => n.id === step.from);
+            const to = nodes.find(n => n.id === step.to);
+            statusEl.textContent = step.text;
+
+            // Highlight source
+            d3.select(`#sim-node-${step.from}`).transition().duration(200)
+                .attr('stroke-width', 3).attr('fill', step.color + '10');
+
+            // Animate particle
+            particle.attr('fill', step.color).attr('opacity', 1)
+                .attr('cx', from.x + from.w/2).attr('cy', from.y);
+
+            await new Promise(resolve => {
+                particle.transition().duration(800).ease(d3.easeCubicInOut)
+                    .attr('cx', to.x - to.w/2).attr('cy', to.y)
+                    .on('end', resolve);
+            });
+
+            // Highlight target
+            d3.select(`#sim-node-${step.to}`).transition().duration(200)
+                .attr('stroke-width', 3).attr('fill', step.color + '10');
+
+            particle.attr('opacity', 0);
+            await new Promise(r => setTimeout(r, 600));
+        }
+
+        statusEl.textContent = 'Cycle complete. The loop continues as dev reviews and iterates.';
+        animating = false;
+        document.getElementById('sim-play').disabled = false;
+    };
+
+    window.resetSimulation = function() {
+        animating = false;
+        document.getElementById('sim-play').disabled = false;
+        particle.attr('opacity', 0);
+        statusEl.textContent = '';
+        resetHighlights();
+    };
+
+    function resetHighlights() {
+        nodes.forEach(n => {
+            d3.select(`#sim-node-${n.id}`).transition().duration(300)
+                .attr('stroke-width', 2).attr('fill', 'white');
+        });
+    }
 })();
 
 // Load agent instructions
