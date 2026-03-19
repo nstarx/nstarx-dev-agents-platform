@@ -34,6 +34,7 @@
         .hero-links a:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
         .btn-pulse { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
         .btn-exec { background: linear-gradient(135deg, #34d399, #059669); color: white; }
+        .btn-octo { background: linear-gradient(135deg, #fb923c, #ea580c); color: white; }
         .btn-outline { border: 1px solid var(--border); color: var(--text); }
 
         .section { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
@@ -47,12 +48,14 @@
         .story-text h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
         .story-text h3 .badge { display: inline-block; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 999px; vertical-align: middle; margin-left: 0.5rem; font-weight: 600; }
         .badge-pulse { background: rgba(99,102,241,0.1); color: var(--pulse); }
+        .badge-octo { background: rgba(234,88,12,0.1); color: #ea580c; }
         .badge-exec { background: rgba(5,150,105,0.1); color: var(--exec); }
         .story-text p { color: var(--text-dim); margin-bottom: 1rem; }
         .story-text ul { list-style: none; }
         .story-text li { padding: 0.3rem 0; padding-left: 1.2rem; position: relative; color: var(--text-dim); font-size: 0.9rem; }
         .story-text li::before { content: ''; position: absolute; left: 0; top: 0.7rem; width: 6px; height: 6px; border-radius: 50%; background: var(--pulse); }
         .story-text.exec li::before { background: var(--exec); }
+        .story-text.octo li::before { background: #ea580c; }
 
         .story-img { border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .story-img img { width: 100%; display: block; }
@@ -76,11 +79,12 @@
         .agent-box { background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(5,150,105,0.04)); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; margin-top: 4rem; }
         .agent-box h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
         .agent-box > p { color: var(--text-dim); margin-bottom: 1.5rem; }
-        .ep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .ep-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
         .ep-card { background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
         .ep-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
         .ep-card code { display: block; background: #1e293b; padding: 0.5rem 0.75rem; border-radius: 0.4rem; font-size: 0.8rem; margin-bottom: 0.6rem; word-break: break-all; }
         .ep-card .c-pulse { color: #a5b4fc; }
+        .ep-card .c-octo { color: #fdba74; }
         .ep-card .c-exec { color: #6ee7b7; }
         .ep-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
 
@@ -90,7 +94,7 @@
         @media (max-width: 768px) {
             .story { grid-template-columns: 1fr; }
             .story.reverse { direction: ltr; }
-            .ep-grid { grid-template-columns: 1fr; }
+            .ep-grid { grid-template-columns: 1fr !important; }
             .gallery { grid-template-columns: 1fr; }
         }
     </style>
@@ -100,10 +104,11 @@
 <section class="hero">
     <span class="hero-badge">NStar X Inc.</span>
     <h1>Build Software Faster with AI Coding Agents</h1>
-    <p>Two tools that give you and your AI agents (Claude Code, Cursor, etc.) complete visibility over your projects &mdash; from high-level strategy to daily task execution.</p>
+    <p>Three tools that give you and your AI agents (Claude Code, Cursor, etc.) complete visibility over your projects &mdash; from high-level strategy through orchestration to task execution.</p>
     <div class="hero-links">
-        <a href="https://nstarx.myddns.me/pulse/" class="btn-pulse">Open Pulse Prana</a>
-        <a href="https://nstarx.myddns.me/execution/" class="btn-exec">Open Execution Flow</a>
+        <a href="https://nstarx.myddns.me/pulse/" class="btn-pulse">Pulse Prana</a>
+        <a href="#octopus" class="btn-octo">Octopus</a>
+        <a href="https://nstarx.myddns.me/execution/" class="btn-exec">Execution Flow</a>
         <a href="#how-it-works" class="btn-outline">How It Works</a>
     </div>
 </section>
@@ -176,20 +181,62 @@
             <img src="screenshots/exec-risk.png" alt="Execution Flow Risk Analysis">
         </div>
     </div>
+
+    <div class="story" id="octopus">
+        <div class="story-text octo">
+            <h3>Orchestrate your AI agents <span class="badge badge-octo">Octopus</span></h3>
+            <p>The nerve center between your project tools and Claude Code. Octopus monitors 100+ projects in real-time, tracks git status, manages dependencies as a mesh, and feeds context to your AI coding agents.</p>
+            <ul>
+                <li>Real-time monitoring of all Claude Code projects</li>
+                <li>Project mesh with dependency graph &amp; cascade propagation</li>
+                <li>Prompt factory with hierarchical prompt management</li>
+                <li>Bidirectional sync with Pulse Prana</li>
+                <li>Distributed collectors across multiple machines</li>
+                <li>Claude Code hook integration (session lifecycle)</li>
+            </ul>
+        </div>
+        <div class="story-img">
+            <img src="screenshots/octopus-dashboard.png" alt="Octopus Dashboard">
+        </div>
+    </div>
+
+    <div class="story reverse">
+        <div class="story-text octo">
+            <h3>Visualize project dependencies <span class="badge badge-octo">Octopus</span></h3>
+            <p>See how your projects connect. The mesh graph shows dependencies with friction-based cascade propagation &mdash; when one project changes, dependent projects are automatically notified with configurable delays.</p>
+            <ul>
+                <li>Interactive D3.js dependency graph</li>
+                <li>Hard, soft &amp; context dependency types</li>
+                <li>Cascade events with timeline visualization</li>
+                <li>Graph execution across multiple projects</li>
+            </ul>
+        </div>
+        <div class="story-img">
+            <img src="screenshots/octopus-mesh.png" alt="Octopus Project Mesh">
+        </div>
+    </div>
 </div>
 
 <!-- Gallery -->
 <div class="section" style="padding-top:0;">
     <h2 class="section-title">More Screenshots</h2>
-    <p class="section-sub">Both apps are fully functional and deployed.</p>
+    <p class="section-sub">All three apps are fully functional and deployed.</p>
     <div class="gallery">
         <div class="gallery-card">
             <img src="screenshots/pulse-roadmap.png" alt="Roadmap">
             <div class="cap"><h4>Product Roadmap</h4><p>Capabilities timeline with horizons, progress bars, and status badges.</p></div>
         </div>
         <div class="gallery-card">
+            <img src="screenshots/octopus-projects.png" alt="Octopus Projects">
+            <div class="cap"><h4>Octopus &mdash; 118 Projects</h4><p>All Claude Code projects monitored with git status, activity tracking, and filtering.</p></div>
+        </div>
+        <div class="gallery-card">
             <img src="screenshots/exec-overview.png" alt="Exec Overview">
             <div class="cap"><h4>Execution Plan Overview</h4><p>Project summary with total effort, tasks, phases, and team scenarios.</p></div>
+        </div>
+        <div class="gallery-card">
+            <img src="screenshots/octopus-subtasks.png" alt="Octopus Subtasks">
+            <div class="cap"><h4>Octopus &mdash; Subtasks</h4><p>Linked tasks view with connected groups and cross-project task management.</p></div>
         </div>
         <div class="gallery-card">
             <img src="screenshots/exec-tasks.png" alt="Task Overview">
@@ -203,8 +250,8 @@
 
     <!-- D3 Architecture Diagram -->
     <div class="diagram-wrap" id="architecture">
-        <h3>How the Two Services Work Together</h3>
-        <p>You define your project goals in Pulse Prana. Your AI coding agent reads the context via API, then uses Execution Flow to understand what to build next, in what order, and what risks to watch for.</p>
+        <h3>How the Three Services Work Together</h3>
+        <p>You define goals in Pulse Prana. Octopus monitors your projects, manages dependencies, and orchestrates context. Execution Flow breaks work into tasks. Your AI agent gets everything it needs via API.</p>
         <div id="diagram"></div>
     </div>
 
@@ -217,6 +264,11 @@
                 <h4>Pulse Prana &mdash; Know Me</h4>
                 <code class="c-pulse">curl https://nstarx.myddns.me/pulse/api/know-me</code>
                 <p>Returns a complete description of all API endpoints, data models, and usage patterns. One URL gives your agent everything it needs to interact with your project data.</p>
+            </div>
+            <div class="ep-card">
+                <h4>Octopus &mdash; Projects &amp; Mesh</h4>
+                <code class="c-octo">curl http://localhost:8000/api/projects</code>
+                <p>Real-time project monitoring, dependency graph, cascade events, and prompt management. The orchestration layer that connects everything.</p>
             </div>
             <div class="ep-card">
                 <h4>Execution Flow &mdash; Execution Plan</h4>
@@ -233,126 +285,152 @@
 
 <script>
 (function() {
-    const W = 900, H = 560;
+    const W = 940, H = 620;
     const svg = d3.select('#diagram').append('svg')
         .attr('viewBox', `0 0 ${W} ${H}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
-
     const defs = svg.append('defs');
 
-    // Glow filter
     const glow = defs.append('filter').attr('id', 'glow').attr('x', '-20%').attr('y', '-20%').attr('width', '140%').attr('height', '140%');
-    glow.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
+    glow.append('feGaussianBlur').attr('stdDeviation', '2.5').attr('result', 'blur');
     glow.append('feMerge').selectAll('feMergeNode').data(['blur', 'SourceGraphic']).join('feMergeNode').attr('in', d => d);
 
-    // Arrow markers
-    [['arr', '#94a3b8'], ['arr-p', '#6366f1'], ['arr-e', '#059669'], ['arr-w', '#d97706']].forEach(([id, c]) => {
+    [['arr', '#94a3b8'], ['arr-p', '#6366f1'], ['arr-o', '#ea580c'], ['arr-e', '#059669'], ['arr-w', '#d97706']].forEach(([id, c]) => {
         defs.append('marker').attr('id', id).attr('viewBox', '0 0 10 10')
             .attr('refX', 9).attr('refY', 5).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
             .append('path').attr('d', 'M0 1 L9 5 L0 9z').attr('fill', c);
     });
 
-    // Helpers
-    function curvedArrow(pts, color, marker, dashed) {
-        const line = d3.line().curve(d3.curveBasis);
-        const p = svg.append('path').attr('d', line(pts))
+    function curve(pts, color, marker, dashed) {
+        const p = svg.append('path').attr('d', d3.line().curve(d3.curveBasis)(pts))
             .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2)
             .attr('marker-end', `url(#${marker})`).attr('filter', 'url(#glow)');
         if (dashed) p.attr('stroke-dasharray', '6,5');
-        return p;
     }
-    function txt(x, y, t, size, color, weight, anchor) {
-        return svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anchor || 'middle')
-            .attr('fill', color || '#94a3b8').attr('font-size', size || 11).attr('font-weight', weight || 400).text(t);
+    function txt(x, y, t, sz, col, wt, anc) {
+        svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anc || 'middle')
+            .attr('fill', col || '#94a3b8').attr('font-size', sz || 11).attr('font-weight', wt || 400).text(t);
     }
-    function stepBadge(x, y, n, color) {
-        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 12).attr('fill', color).attr('opacity', 0.9);
-        svg.append('text').attr('x', x).attr('y', y + 4).attr('text-anchor', 'middle')
-            .attr('fill', '#fff').attr('font-size', 11).attr('font-weight', 700).text(n);
+    function badge(x, y, n, col) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 12).attr('fill', col).attr('opacity', 0.9);
+        svg.append('text').attr('x', x).attr('y', y + 4).attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-size', 11).attr('font-weight', 700).text(n);
+    }
+    function box(x, y, w, h, fill, stroke) {
+        svg.append('rect').attr('x', x - w/2).attr('y', y - h/2).attr('width', w).attr('height', h)
+            .attr('rx', 16).attr('fill', fill).attr('stroke', stroke).attr('stroke-width', 2);
     }
 
     const cx = W / 2;
 
-    // ========== NODES ==========
+    // === ROW 1: Developer ===
+    const devX = cx, devY = 50;
+    svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 34).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 2);
+    svg.append('text').attr('x', devX).attr('y', devY + 2).attr('text-anchor', 'middle').attr('font-size', 26).text('👨‍💻');
+    txt(devX, devY + 50, 'You (Dev Lead)', 13, '#1e293b', 600);
 
-    // --- Step 1: Developer (top-center) ---
-    const devX = cx, devY = 55;
-    svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 36).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 2);
-    svg.append('text').attr('x', devX).attr('y', devY + 1).attr('text-anchor', 'middle').attr('fill', '#1e293b').attr('font-size', 28).text('👨‍💻');
-    txt(devX, devY + 54, 'You (Dev Lead)', 13, '#1e293b', 600);
+    // === ROW 2: Three Services ===
+    const row2Y = 210, bw = 200, bh = 105;
 
-    // --- Step 2: Pulse Prana (left) ---
-    const ppX = 195, ppY = 240, bw = 220, bh = 120;
-    svg.append('rect').attr('x', ppX - bw/2).attr('y', ppY - bh/2).attr('width', bw).attr('height', bh)
-        .attr('rx', 16).attr('fill', 'rgba(99,102,241,0.04)').attr('stroke', '#6366f1').attr('stroke-width', 2);
-    txt(ppX, ppY - 32, 'Pulse Prana', 16, '#6366f1', 700);
-    txt(ppX, ppY - 12, 'What to build & why', 11, '#818cf8');
-    ['Projects & Roadmap', 'Status & Milestones', 'AI Healing & Suggestions'].forEach((t, i) =>
-        txt(ppX, ppY + 10 + i * 17, t, 10, '#94a3b8'));
+    // Pulse Prana (left)
+    const ppX = 145;
+    box(ppX, row2Y, bw, bh, 'rgba(99,102,241,0.04)', '#6366f1');
+    txt(ppX, row2Y - 28, 'Pulse Prana', 15, '#6366f1', 700);
+    txt(ppX, row2Y - 10, 'What to build & why', 10, '#818cf8');
+    ['Projects & Roadmap', 'Status & Milestones', 'AI Healing'].forEach((t, i) => txt(ppX, row2Y + 10 + i * 16, t, 10));
 
-    // --- Step 3: Execution Flow (right) ---
-    const efX = W - 195, efY = 240;
-    svg.append('rect').attr('x', efX - bw/2).attr('y', efY - bh/2).attr('width', bw).attr('height', bh)
-        .attr('rx', 16).attr('fill', 'rgba(5,150,105,0.04)').attr('stroke', '#059669').attr('stroke-width', 2);
-    txt(efX, efY - 32, 'Execution Flow', 16, '#059669', 700);
-    txt(efX, efY - 12, 'How to build & when', 11, '#34d399');
-    ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'].forEach((t, i) =>
-        txt(efX, efY + 10 + i * 17, t, 10, '#94a3b8'));
+    // Octopus (center)
+    const ocX = cx;
+    box(ocX, row2Y, bw + 20, bh, 'rgba(234,88,12,0.04)', '#ea580c');
+    txt(ocX, row2Y - 28, '🐙 Octopus', 15, '#ea580c', 700);
+    txt(ocX, row2Y - 10, 'Orchestration layer', 10, '#fb923c');
+    ['Project Mesh & Dependencies', 'Prompt Factory & Tasks', 'Claude Code Hooks'].forEach((t, i) => txt(ocX, row2Y + 10 + i * 16, t, 10));
 
-    // --- Step 4: AI Agent (center-bottom) ---
-    const aiX = cx, aiY = 410, aiW = 240, aiH = 72;
-    svg.append('rect').attr('x', aiX - aiW/2).attr('y', aiY - aiH/2).attr('width', aiW).attr('height', aiH)
-        .attr('rx', 16).attr('fill', 'rgba(217,119,6,0.04)').attr('stroke', '#d97706').attr('stroke-width', 2);
-    txt(aiX, aiY - 12, 'AI Coding Agent', 16, '#d97706', 700);
+    // Execution Flow (right)
+    const efX = W - 145;
+    box(efX, row2Y, bw, bh, 'rgba(5,150,105,0.04)', '#059669');
+    txt(efX, efX && row2Y - 28, 'Execution Flow', 15, '#059669', 700);
+    txt(efX, row2Y - 10, 'How to build & when', 10, '#34d399');
+    ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'].forEach((t, i) => txt(efX, row2Y + 10 + i * 16, t, 10));
+
+    // === ROW 3: AI Agent ===
+    const aiX = cx, aiY = 400, aiW = 240, aiH = 68;
+    box(aiX, aiY, aiW, aiH, 'rgba(217,119,6,0.04)', '#d97706');
+    txt(aiX, aiY - 10, 'AI Coding Agent', 15, '#d97706', 700);
     txt(aiX, aiY + 10, 'Claude Code  ·  Cursor  ·  Windsurf', 10, '#b45309');
 
-    // --- Step 5: Codebase (bottom) ---
-    const codeX = cx, codeY = 520, codeW = 180, codeH = 46;
+    // === ROW 4: Codebase ===
+    const codeX = cx, codeY = 510, codeW = 180, codeH = 44;
     svg.append('rect').attr('x', codeX - codeW/2).attr('y', codeY - codeH/2).attr('width', codeW).attr('height', codeH)
         .attr('rx', 10).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 1.5);
     txt(codeX, codeY + 5, '📁  Your Codebase', 13, '#1e293b', 600);
 
-    // ========== ARROWS ==========
+    // === ARROWS ===
 
-    // 1 Dev -> Pulse Prana (curved left)
-    curvedArrow([[devX - 15, devY + 36], [devX - 80, devY + 90], [ppX + 30, ppY - bh/2]], '#6366f1', 'arr-p');
-    stepBadge(devX - 65, devY + 78, '1', '#6366f1');
-    txt(devX - 120, devY + 100, 'Define goals', 10, '#6366f1', 600, 'end');
+    // 1: Dev -> Pulse Prana
+    curve([[devX - 20, devY + 34], [devX - 100, devY + 80], [ppX + 30, row2Y - bh/2]], '#6366f1', 'arr-p');
+    badge(devX - 80, devY + 72, '1', '#6366f1');
+    txt(devX - 145, devY + 85, 'Define goals', 10, '#6366f1', 600, 'end');
 
-    // 2 Dev -> Execution Flow (curved right)
-    curvedArrow([[devX + 15, devY + 36], [devX + 80, devY + 90], [efX - 30, efY - bh/2]], '#059669', 'arr-e');
-    stepBadge(devX + 65, devY + 78, '2', '#059669');
-    txt(devX + 120, devY + 100, 'Plan execution', 10, '#059669', 600, 'start');
+    // 1: Dev -> Octopus
+    curve([[devX, devY + 34], [devX, devY + 80], [ocX, row2Y - bh/2]], '#ea580c', 'arr-o');
+    txt(devX + 55, devY + 80, 'Monitor', 10, '#ea580c', 600, 'start');
 
-    // Pulse <-> Execution (horizontal, dashed)
-    curvedArrow([[ppX + bw/2 + 2, ppY], [cx, ppY - 20], [efX - bw/2 - 2, efY]], '#94a3b8', 'arr', true);
-    txt(cx, ppY - 32, 'Shared project context', 10, '#94a3b8');
+    // 1: Dev -> Execution Flow
+    curve([[devX + 20, devY + 34], [devX + 100, devY + 80], [efX - 30, row2Y - bh/2]], '#059669', 'arr-e');
+    badge(devX + 80, devY + 72, '1', '#059669');
+    txt(devX + 145, devY + 85, 'Plan tasks', 10, '#059669', 600, 'start');
 
-    // 3 Pulse -> AI Agent (curved down-left)
-    curvedArrow([[ppX, ppY + bh/2 + 2], [ppX + 40, ppY + bh/2 + 50], [aiX - 60, aiY - aiH/2]], '#6366f1', 'arr-p');
-    stepBadge(ppX + 10, ppY + bh/2 + 38, '3', '#6366f1');
-    txt(ppX - 40, ppY + bh/2 + 50, '/api/know-me', 10, '#6366f1', 700, 'end');
+    // 2: Pulse <-> Octopus (bidirectional sync)
+    curve([[ppX + bw/2 + 2, row2Y - 15], [ppX + bw/2 + 30, row2Y - 30], [ocX - bw/2 - 12, row2Y - 15]], '#6366f1', 'arr-p');
+    curve([[ocX - bw/2 - 12, row2Y + 15], [ppX + bw/2 + 30, row2Y + 30], [ppX + bw/2 + 2, row2Y + 15]], '#ea580c', 'arr-o');
+    badge((ppX + ocX) / 2, row2Y - 38, '2', '#94a3b8');
+    txt((ppX + ocX) / 2, row2Y - 52, 'Sync', 10, '#64748b', 600);
 
-    // 3 Execution -> AI Agent (curved down-right)
-    curvedArrow([[efX, efY + bh/2 + 2], [efX - 40, efY + bh/2 + 50], [aiX + 60, aiY - aiH/2]], '#059669', 'arr-e');
-    stepBadge(efX - 10, efY + bh/2 + 38, '3', '#059669');
-    txt(efX + 40, efY + bh/2 + 50, '/api/execution-plan', 10, '#059669', 700, 'start');
+    // 2: Octopus <-> Execution Flow
+    curve([[ocX + bw/2 + 12, row2Y - 15], [efX - bw/2 - 30, row2Y - 30], [efX - bw/2 - 2, row2Y - 15]], '#ea580c', 'arr-o');
+    curve([[efX - bw/2 - 2, row2Y + 15], [efX - bw/2 - 30, row2Y + 30], [ocX + bw/2 + 12, row2Y + 15]], '#059669', 'arr-e');
+    badge((ocX + efX) / 2, row2Y - 38, '2', '#94a3b8');
+    txt((ocX + efX) / 2, row2Y - 52, 'Sync', 10, '#64748b', 600);
 
-    // 4 AI Agent -> Codebase
-    curvedArrow([[aiX, aiY + aiH/2 + 2], [aiX, aiY + aiH/2 + 20], [codeX, codeY - codeH/2 - 2]], '#d97706', 'arr-w');
-    stepBadge(aiX + 30, aiY + aiH/2 + 18, '4', '#d97706');
-    txt(aiX + 75, aiY + aiH/2 + 22, 'Writes informed code', 10, '#b45309', 600, 'start');
+    // 3: All three -> AI Agent
+    curve([[ppX, row2Y + bh/2 + 2], [ppX + 50, row2Y + bh/2 + 55], [aiX - 70, aiY - aiH/2]], '#6366f1', 'arr-p');
+    badge(ppX + 15, row2Y + bh/2 + 42, '3', '#6366f1');
+    txt(ppX - 30, row2Y + bh/2 + 55, '/api/know-me', 9, '#6366f1', 700, 'end');
 
-    // 5 Codebase -> Dev (feedback, far left curve)
-    curvedArrow([
-        [codeX - codeW/2, codeY],
-        [40, codeY - 30],
-        [30, devY + 80],
-        [devX - 36, devY + 10]
+    curve([[ocX, row2Y + bh/2 + 2], [ocX, row2Y + bh/2 + 40], [aiX, aiY - aiH/2]], '#ea580c', 'arr-o');
+    badge(ocX + 25, row2Y + bh/2 + 30, '3', '#ea580c');
+    txt(ocX + 55, row2Y + bh/2 + 35, '/api/projects', 9, '#ea580c', 700, 'start');
+
+    curve([[efX, row2Y + bh/2 + 2], [efX - 50, row2Y + bh/2 + 55], [aiX + 70, aiY - aiH/2]], '#059669', 'arr-e');
+    badge(efX - 15, row2Y + bh/2 + 42, '3', '#059669');
+    txt(efX + 30, row2Y + bh/2 + 55, '/api/execution-plan', 9, '#059669', 700, 'start');
+
+    // 4: AI Agent -> Codebase
+    curve([[aiX, aiY + aiH/2 + 2], [aiX, aiY + aiH/2 + 20], [codeX, codeY - codeH/2 - 2]], '#d97706', 'arr-w');
+    badge(aiX + 28, aiY + aiH/2 + 16, '4', '#d97706');
+    txt(aiX + 70, aiY + aiH/2 + 20, 'Writes informed code', 10, '#b45309', 600, 'start');
+
+    // 5: Codebase -> Octopus (hooks detect changes) - dashed loop on right
+    curve([
+        [codeX + codeW/2, codeY],
+        [W - 40, codeY - 20],
+        [W - 30, row2Y + 60],
+        [ocX + bw/2 + 12, row2Y + 30]
     ], '#94a3b8', 'arr', true);
-    stepBadge(30, devY + 160, '5', '#94a3b8');
-    txt(52, devY + 180, 'Review', 10, '#94a3b8', 400, 'start');
-    txt(52, devY + 194, '& iterate', 10, '#94a3b8', 400, 'start');
+    badge(W - 35, row2Y + 120, '5', '#94a3b8');
+    txt(W - 18, row2Y + 140, 'Hooks', 10, '#94a3b8', 400, 'start');
+    txt(W - 18, row2Y + 154, 'detect', 10, '#94a3b8', 400, 'start');
+
+    // 6: Codebase -> Dev (review loop) - dashed on left
+    curve([
+        [codeX - codeW/2, codeY],
+        [40, codeY - 20],
+        [30, devY + 70],
+        [devX - 34, devY + 8]
+    ], '#94a3b8', 'arr', true);
+    badge(32, devY + 140, '6', '#94a3b8');
+    txt(50, devY + 158, 'Review &', 10, '#94a3b8', 400, 'start');
+    txt(50, devY + 172, 'iterate', 10, '#94a3b8', 400, 'start');
 
 })();
 </script>
