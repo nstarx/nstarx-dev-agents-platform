@@ -7,15 +7,15 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --surface2: #334155;
-            --border: #475569;
-            --text: #e2e8f0;
-            --text-dim: #94a3b8;
-            --pulse: #818cf8;
-            --exec: #34d399;
-            --warn: #f59e0b;
+            --bg: #ffffff;
+            --surface: #f8fafc;
+            --surface2: #f1f5f9;
+            --border: #e2e8f0;
+            --text: #1e293b;
+            --text-dim: #64748b;
+            --pulse: #6366f1;
+            --exec: #059669;
+            --warn: #d97706;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
@@ -23,11 +23,11 @@
         .hero {
             min-height: 90vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; padding: 2rem;
-            background: radial-gradient(ellipse at 30% 20%, rgba(129,140,248,0.12) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(52,211,153,0.08) 0%, transparent 50%), var(--bg);
+            background: radial-gradient(ellipse at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(5,150,105,0.06) 0%, transparent 50%), var(--bg);
         }
         .hero-badge { display: inline-block; padding: 0.4rem 1.2rem; border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 2rem; letter-spacing: 0.1em; text-transform: uppercase; }
-        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; background: linear-gradient(135deg, #e2e8f0, #818cf8, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem; background: linear-gradient(135deg, #1e293b, #6366f1, #059669); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 1.15rem; color: var(--text-dim); max-width: 680px; margin-bottom: 2.5rem; }
         .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
         .hero-links a { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.6rem; border-radius: 0.75rem; font-weight: 600; text-decoration: none; font-size: 0.95rem; transition: transform 0.2s, box-shadow 0.2s; }
@@ -46,8 +46,8 @@
         .story.reverse > * { direction: ltr; }
         .story-text h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
         .story-text h3 .badge { display: inline-block; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 999px; vertical-align: middle; margin-left: 0.5rem; font-weight: 600; }
-        .badge-pulse { background: rgba(129,140,248,0.2); color: var(--pulse); }
-        .badge-exec { background: rgba(52,211,153,0.2); color: var(--exec); }
+        .badge-pulse { background: rgba(99,102,241,0.1); color: var(--pulse); }
+        .badge-exec { background: rgba(5,150,105,0.1); color: var(--exec); }
         .story-text p { color: var(--text-dim); margin-bottom: 1rem; }
         .story-text ul { list-style: none; }
         .story-text li { padding: 0.3rem 0; padding-left: 1.2rem; position: relative; color: var(--text-dim); font-size: 0.9rem; }
@@ -73,15 +73,15 @@
         #diagram svg { width: 100%; }
 
         /* Agent section */
-        .agent-box { background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(52,211,153,0.08)); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; margin-top: 4rem; }
+        .agent-box { background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(5,150,105,0.04)); border: 1px solid var(--border); border-radius: 1rem; padding: 2.5rem; margin-top: 4rem; }
         .agent-box h3 { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.75rem; }
         .agent-box > p { color: var(--text-dim); margin-bottom: 1.5rem; }
         .ep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .ep-card { background: var(--surface); border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.5rem; }
         .ep-card h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .ep-card code { display: block; background: var(--bg); padding: 0.5rem 0.75rem; border-radius: 0.4rem; font-size: 0.8rem; margin-bottom: 0.6rem; word-break: break-all; }
-        .ep-card .c-pulse { color: var(--pulse); }
-        .ep-card .c-exec { color: var(--exec); }
+        .ep-card code { display: block; background: #1e293b; padding: 0.5rem 0.75rem; border-radius: 0.4rem; font-size: 0.8rem; margin-bottom: 0.6rem; word-break: break-all; }
+        .ep-card .c-pulse { color: #a5b4fc; }
+        .ep-card .c-exec { color: #6ee7b7; }
         .ep-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; }
 
         footer { text-align: center; padding: 3rem 2rem; color: var(--text-dim); font-size: 0.85rem; border-top: 1px solid var(--border); }
@@ -233,115 +233,126 @@
 
 <script>
 (function() {
-    const container = document.getElementById('diagram');
-    const w = Math.min(container.clientWidth, 960);
-    const h = 500;
-    const cx = w / 2;
-
+    const W = 900, H = 560;
     const svg = d3.select('#diagram').append('svg')
-        .attr('viewBox', `0 0 ${w} ${h}`)
+        .attr('viewBox', `0 0 ${W} ${H}`)
         .attr('preserveAspectRatio', 'xMidYMid meet');
 
     const defs = svg.append('defs');
 
-    // Arrow
-    defs.append('marker').attr('id', 'arr').attr('viewBox', '0 0 10 10')
-        .attr('refX', 10).attr('refY', 5).attr('markerWidth', 7).attr('markerHeight', 7).attr('orient', 'auto')
-        .append('path').attr('d', 'M0 0 L10 5 L0 10z').attr('fill', '#64748b');
+    // Glow filter
+    const glow = defs.append('filter').attr('id', 'glow').attr('x', '-20%').attr('y', '-20%').attr('width', '140%').attr('height', '140%');
+    glow.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'blur');
+    glow.append('feMerge').selectAll('feMergeNode').data(['blur', 'SourceGraphic']).join('feMergeNode').attr('in', d => d);
 
-    // Rounded rect helper
-    function box(x, y, bw, bh, fill, stroke, r) {
-        svg.append('rect').attr('x', x).attr('y', y).attr('width', bw).attr('height', bh)
-            .attr('rx', r || 16).attr('fill', fill).attr('stroke', stroke).attr('stroke-width', 1.5);
-    }
-    function label(x, y, text, size, color, weight, anchor) {
-        svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anchor || 'middle')
-            .attr('fill', color).attr('font-size', size).attr('font-weight', weight || 400).text(text);
-    }
-    function arrow(x1, y1, x2, y2, dashed) {
-        const l = svg.append('line').attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2)
-            .attr('stroke', '#64748b').attr('stroke-width', 1.5).attr('marker-end', 'url(#arr)');
-        if (dashed) l.attr('stroke-dasharray', '5,4');
-    }
-
-    // === LAYOUT ===
-    // Row 1: Developer
-    const devX = cx, devY = 45;
-    // Row 2: Pulse Prana & Execution Flow
-    const ppX = cx - 180, ppY = 170, efX = cx + 180, efY = 170;
-    // Row 3: AI Agent
-    const aiX = cx, aiY = 340;
-    // Row 4: Codebase
-    const codeX = cx, codeY = 450;
-
-    // --- Developer ---
-    svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 32)
-        .attr('fill', '#334155').attr('stroke', '#94a3b8').attr('stroke-width', 1.5);
-    label(devX, devY - 4, 'You', 14, '#e2e8f0', 700);
-    label(devX, devY + 12, '(Dev Lead)', 9, '#94a3b8');
-
-    // --- Pulse Prana ---
-    const bw = 200, bh = 110;
-    box(ppX - bw/2, ppY - bh/2, bw, bh, 'rgba(129,140,248,0.08)', '#818cf8');
-    label(ppX, ppY - 28, 'Pulse Prana', 15, '#818cf8', 700);
-    label(ppX, ppY - 8, '"What to build & why"', 10, '#c7d2fe');
-    const ppItems = ['Projects & Roadmap', 'Status & Milestones', 'AI Healing'];
-    ppItems.forEach((t, i) => {
-        label(ppX, ppY + 14 + i * 15, t, 10, '#94a3b8');
+    // Arrow markers
+    [['arr', '#94a3b8'], ['arr-p', '#6366f1'], ['arr-e', '#059669'], ['arr-w', '#d97706']].forEach(([id, c]) => {
+        defs.append('marker').attr('id', id).attr('viewBox', '0 0 10 10')
+            .attr('refX', 9).attr('refY', 5).attr('markerWidth', 6).attr('markerHeight', 6).attr('orient', 'auto')
+            .append('path').attr('d', 'M0 1 L9 5 L0 9z').attr('fill', c);
     });
 
-    // --- Execution Flow ---
-    box(efX - bw/2, efY - bh/2, bw, bh, 'rgba(52,211,153,0.08)', '#34d399');
-    label(efX, efY - 28, 'Execution Flow', 15, '#34d399', 700);
-    label(efX, efY - 8, '"How to build & when"', 10, '#86efac');
-    const efItems = ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'];
-    efItems.forEach((t, i) => {
-        label(efX, efY + 14 + i * 15, t, 10, '#94a3b8');
-    });
+    // Helpers
+    function curvedArrow(pts, color, marker, dashed) {
+        const line = d3.line().curve(d3.curveBasis);
+        const p = svg.append('path').attr('d', line(pts))
+            .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2)
+            .attr('marker-end', `url(#${marker})`).attr('filter', 'url(#glow)');
+        if (dashed) p.attr('stroke-dasharray', '6,5');
+        return p;
+    }
+    function txt(x, y, t, size, color, weight, anchor) {
+        return svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anchor || 'middle')
+            .attr('fill', color || '#94a3b8').attr('font-size', size || 11).attr('font-weight', weight || 400).text(t);
+    }
+    function stepBadge(x, y, n, color) {
+        svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 12).attr('fill', color).attr('opacity', 0.9);
+        svg.append('text').attr('x', x).attr('y', y + 4).attr('text-anchor', 'middle')
+            .attr('fill', '#fff').attr('font-size', 11).attr('font-weight', 700).text(n);
+    }
 
-    // --- AI Agent ---
-    svg.append('rect').attr('x', aiX - 100).attr('y', aiY - 35).attr('width', 200).attr('height', 70)
-        .attr('rx', 16).attr('fill', 'rgba(245,158,11,0.08)').attr('stroke', '#f59e0b').attr('stroke-width', 1.5);
-    label(aiX, aiY - 10, 'AI Coding Agent', 15, '#f59e0b', 700);
-    label(aiX, aiY + 10, 'Claude Code / Cursor / etc.', 10, '#fbbf24');
+    const cx = W / 2;
 
-    // --- Codebase ---
-    svg.append('rect').attr('x', codeX - 80).attr('y', codeY - 22).attr('width', 160).attr('height', 44)
-        .attr('rx', 10).attr('fill', '#334155').attr('stroke', '#64748b').attr('stroke-width', 1);
-    label(codeX, codeY + 5, 'Your Codebase', 12, '#e2e8f0', 600);
+    // ========== NODES ==========
 
-    // === ARROWS ===
+    // --- Step 1: Developer (top-center) ---
+    const devX = cx, devY = 55;
+    svg.append('circle').attr('cx', devX).attr('cy', devY).attr('r', 36).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 2);
+    svg.append('text').attr('x', devX).attr('y', devY + 1).attr('text-anchor', 'middle').attr('fill', '#1e293b').attr('font-size', 28).text('👨‍💻');
+    txt(devX, devY + 54, 'You (Dev Lead)', 13, '#1e293b', 600);
 
-    // Dev -> Pulse Prana: "Define goals"
-    arrow(devX - 20, devY + 32, ppX + 20, ppY - bh/2);
-    label(ppX - 40, ppY - bh/2 - 18, 'Define goals &', 9, '#c7d2fe', 400, 'end');
-    label(ppX - 40, ppY - bh/2 - 6, 'track progress', 9, '#c7d2fe', 400, 'end');
+    // --- Step 2: Pulse Prana (left) ---
+    const ppX = 195, ppY = 240, bw = 220, bh = 120;
+    svg.append('rect').attr('x', ppX - bw/2).attr('y', ppY - bh/2).attr('width', bw).attr('height', bh)
+        .attr('rx', 16).attr('fill', 'rgba(99,102,241,0.04)').attr('stroke', '#6366f1').attr('stroke-width', 2);
+    txt(ppX, ppY - 32, 'Pulse Prana', 16, '#6366f1', 700);
+    txt(ppX, ppY - 12, 'What to build & why', 11, '#818cf8');
+    ['Projects & Roadmap', 'Status & Milestones', 'AI Healing & Suggestions'].forEach((t, i) =>
+        txt(ppX, ppY + 10 + i * 17, t, 10, '#94a3b8'));
 
-    // Dev -> Execution Flow: "Plan execution"
-    arrow(devX + 20, devY + 32, efX - 20, efY - bh/2);
-    label(efX + 40, efY - bh/2 - 18, 'Plan tasks &', 9, '#86efac', 400, 'start');
-    label(efX + 40, efY - bh/2 - 6, 'team allocation', 9, '#86efac', 400, 'start');
+    // --- Step 3: Execution Flow (right) ---
+    const efX = W - 195, efY = 240;
+    svg.append('rect').attr('x', efX - bw/2).attr('y', efY - bh/2).attr('width', bw).attr('height', bh)
+        .attr('rx', 16).attr('fill', 'rgba(5,150,105,0.04)').attr('stroke', '#059669').attr('stroke-width', 2);
+    txt(efX, efY - 32, 'Execution Flow', 16, '#059669', 700);
+    txt(efX, efY - 12, 'How to build & when', 11, '#34d399');
+    ['Tasks & Gantt Chart', 'Risk & Critical Path', 'Team Scenarios'].forEach((t, i) =>
+        txt(efX, efY + 10 + i * 17, t, 10, '#94a3b8'));
 
-    // Pulse Prana <-> Execution Flow
-    arrow(ppX + bw/2, ppY, efX - bw/2, efY);
-    label(cx, ppY - 12, 'Shared project context', 9, '#94a3b8');
+    // --- Step 4: AI Agent (center-bottom) ---
+    const aiX = cx, aiY = 410, aiW = 240, aiH = 72;
+    svg.append('rect').attr('x', aiX - aiW/2).attr('y', aiY - aiH/2).attr('width', aiW).attr('height', aiH)
+        .attr('rx', 16).attr('fill', 'rgba(217,119,6,0.04)').attr('stroke', '#d97706').attr('stroke-width', 2);
+    txt(aiX, aiY - 12, 'AI Coding Agent', 16, '#d97706', 700);
+    txt(aiX, aiY + 10, 'Claude Code  ·  Cursor  ·  Windsurf', 10, '#b45309');
 
-    // Pulse Prana -> AI Agent: "API: project data"
-    arrow(ppX, ppY + bh/2, aiX - 40, aiY - 35);
-    label(ppX - 50, ppY + bh/2 + 35, '/api/know-me', 9, '#818cf8', 600, 'middle');
+    // --- Step 5: Codebase (bottom) ---
+    const codeX = cx, codeY = 520, codeW = 180, codeH = 46;
+    svg.append('rect').attr('x', codeX - codeW/2).attr('y', codeY - codeH/2).attr('width', codeW).attr('height', codeH)
+        .attr('rx', 10).attr('fill', '#f1f5f9').attr('stroke', '#cbd5e1').attr('stroke-width', 1.5);
+    txt(codeX, codeY + 5, '📁  Your Codebase', 13, '#1e293b', 600);
 
-    // Execution Flow -> AI Agent: "API: execution plan"
-    arrow(efX, efY + bh/2, aiX + 40, aiY - 35);
-    label(efX + 50, efY + bh/2 + 35, '/api/execution-plan', 9, '#34d399', 600, 'middle');
+    // ========== ARROWS ==========
 
-    // AI Agent -> Codebase: "Writes code"
-    arrow(aiX, aiY + 35, codeX, codeY - 22);
-    label(aiX + 60, aiY + 55, 'Writes informed code', 10, '#fbbf24', 400, 'start');
+    // 1 Dev -> Pulse Prana (curved left)
+    curvedArrow([[devX - 15, devY + 36], [devX - 80, devY + 90], [ppX + 30, ppY - bh/2]], '#6366f1', 'arr-p');
+    stepBadge(devX - 65, devY + 78, '1', '#6366f1');
+    txt(devX - 120, devY + 100, 'Define goals', 10, '#6366f1', 600, 'end');
 
-    // Codebase -> Dev (feedback loop, dashed)
-    arrow(codeX - 80, codeY, devX - 60, devY + 30, true);
-    label(codeX - 160, codeY - 40, 'Review &', 9, '#64748b', 400, 'middle');
-    label(codeX - 160, codeY - 28, 'iterate', 9, '#64748b', 400, 'middle');
+    // 2 Dev -> Execution Flow (curved right)
+    curvedArrow([[devX + 15, devY + 36], [devX + 80, devY + 90], [efX - 30, efY - bh/2]], '#059669', 'arr-e');
+    stepBadge(devX + 65, devY + 78, '2', '#059669');
+    txt(devX + 120, devY + 100, 'Plan execution', 10, '#059669', 600, 'start');
+
+    // Pulse <-> Execution (horizontal, dashed)
+    curvedArrow([[ppX + bw/2 + 2, ppY], [cx, ppY - 20], [efX - bw/2 - 2, efY]], '#94a3b8', 'arr', true);
+    txt(cx, ppY - 32, 'Shared project context', 10, '#94a3b8');
+
+    // 3 Pulse -> AI Agent (curved down-left)
+    curvedArrow([[ppX, ppY + bh/2 + 2], [ppX + 40, ppY + bh/2 + 50], [aiX - 60, aiY - aiH/2]], '#6366f1', 'arr-p');
+    stepBadge(ppX + 10, ppY + bh/2 + 38, '3', '#6366f1');
+    txt(ppX - 40, ppY + bh/2 + 50, '/api/know-me', 10, '#6366f1', 700, 'end');
+
+    // 3 Execution -> AI Agent (curved down-right)
+    curvedArrow([[efX, efY + bh/2 + 2], [efX - 40, efY + bh/2 + 50], [aiX + 60, aiY - aiH/2]], '#059669', 'arr-e');
+    stepBadge(efX - 10, efY + bh/2 + 38, '3', '#059669');
+    txt(efX + 40, efY + bh/2 + 50, '/api/execution-plan', 10, '#059669', 700, 'start');
+
+    // 4 AI Agent -> Codebase
+    curvedArrow([[aiX, aiY + aiH/2 + 2], [aiX, aiY + aiH/2 + 20], [codeX, codeY - codeH/2 - 2]], '#d97706', 'arr-w');
+    stepBadge(aiX + 30, aiY + aiH/2 + 18, '4', '#d97706');
+    txt(aiX + 75, aiY + aiH/2 + 22, 'Writes informed code', 10, '#b45309', 600, 'start');
+
+    // 5 Codebase -> Dev (feedback, far left curve)
+    curvedArrow([
+        [codeX - codeW/2, codeY],
+        [40, codeY - 30],
+        [30, devY + 80],
+        [devX - 36, devY + 10]
+    ], '#94a3b8', 'arr', true);
+    stepBadge(30, devY + 160, '5', '#94a3b8');
+    txt(52, devY + 180, 'Review', 10, '#94a3b8', 400, 'start');
+    txt(52, devY + 194, '& iterate', 10, '#94a3b8', 400, 'start');
 
 })();
 </script>
