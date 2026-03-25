@@ -244,7 +244,10 @@
             </ul>
             <div style="margin-top:1rem;">
                 <span style="font-size:0.85rem;color:var(--text-dim);">Install with one command:</span>
-                <code style="display:block;margin-top:0.4rem;background:#1e293b;color:#fb923c;padding:0.6rem 1rem;border-radius:0.5rem;font-size:0.8rem;font-family:'Fira Code','Courier New',monospace;overflow-x:auto;">curl -fsSL https://raw.githubusercontent.com/nstarx/octopus/main/install.sh | bash</code>
+                <div style="display:flex;align-items:center;gap:0;margin-top:0.4rem;background:#1e293b;border-radius:0.5rem;overflow:hidden;">
+                    <code id="octopus-install-cmd" style="flex:1;color:#fb923c;padding:0.6rem 1rem;font-size:0.8rem;font-family:'Fira Code','Courier New',monospace;overflow-x:auto;white-space:nowrap;">curl -fsSL https://raw.githubusercontent.com/nstarx/octopus/main/install.sh | bash</code>
+                    <button onclick="copyInstallCmd()" style="background:none;border:none;color:#94a3b8;padding:0.6rem 0.75rem;cursor:pointer;font-size:1rem;transition:color 0.2s;" title="Copy to clipboard" onmouseenter="this.style.color='#fb923c'" onmouseleave="this.style.color='#94a3b8'">📋</button>
+                </div>
             </div>
         </div>
         <div class="story-img">
@@ -654,6 +657,15 @@
 fetch('agent-instructions.txt').then(r => r.text()).then(t => {
     document.getElementById('agent-text').textContent = t;
 });
+
+function copyInstallCmd() {
+    const text = document.getElementById('octopus-install-cmd').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('copy-toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    });
+}
 
 function copyInstructions() {
     const text = document.getElementById('agent-text').textContent;
